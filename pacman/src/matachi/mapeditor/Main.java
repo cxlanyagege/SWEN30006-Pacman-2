@@ -1,6 +1,6 @@
-package matachi.mapeditor;
+package src.matachi.mapeditor;
 
-import matachi.mapeditor.editor.Controller;
+import src.matachi.mapeditor.editor.Controller;
 
 public class Main {
 	public static void main(String[] args) {

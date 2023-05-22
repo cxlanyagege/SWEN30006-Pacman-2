@@ -1,4 +1,4 @@
-package matachi.mapeditor.grid;
+package src.matachi.mapeditor.grid;
 
 import java.awt.Point;
 import java.awt.Rectangle;

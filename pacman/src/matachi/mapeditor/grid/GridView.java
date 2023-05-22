@@ -1,4 +1,4 @@
-package matachi.mapeditor.grid;
+package src.matachi.mapeditor.grid;
 
 import java.awt.Graphics;
 import java.awt.GridLayout;
@@ -9,9 +9,9 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import matachi.mapeditor.editor.Constants;
-import matachi.mapeditor.editor.GUIInformation;
-import matachi.mapeditor.editor.Tile;
+import src.matachi.mapeditor.editor.Constants;
+import src.matachi.mapeditor.editor.GUIInformation;
+import src.matachi.mapeditor.editor.Tile;
 
 /**
  * A class which shows a Grid graphically as a JPanel.

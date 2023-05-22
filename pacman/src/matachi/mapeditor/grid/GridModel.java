@@ -1,11 +1,10 @@
-package matachi.mapeditor.grid;
+package src.matachi.mapeditor.grid;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 /**
- * An implementation of the interface Grid. It stores characters two
- * dimensionally.
+ * An implementation of the interface Grid. It stores characters two-dimensionally.
  * @author Daniel "MaTachi" Jonsson
  * @version 1
  * @since v0.0.5
@@ -35,7 +34,7 @@ public class GridModel implements Grid {
 	
 	/**
 	 * Constructs the model with number of rows and columns.
-	 * @param cols The number of columns.
+	 * @param columns The number of columns.
 	 * @param rows The number of rows.
 	 * @param defaultChar The character that the map should be filled with by
 	 * default.

@@ -1,4 +1,4 @@
-package matachi.mapeditor.editor;
+package src.matachi.mapeditor.editor;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,11 +17,12 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import matachi.mapeditor.grid.Camera;
-import matachi.mapeditor.grid.Grid;
-import matachi.mapeditor.grid.GridCamera;
-import matachi.mapeditor.grid.GridModel;
-import matachi.mapeditor.grid.GridView;
+import src.Driver;
+import src.matachi.mapeditor.grid.Camera;
+import src.matachi.mapeditor.grid.Grid;
+import src.matachi.mapeditor.grid.GridCamera;
+import src.matachi.mapeditor.grid.GridModel;
+import src.matachi.mapeditor.grid.GridView;
 
 import org.jdom.Attribute;
 import org.jdom.Document;
@@ -98,6 +99,10 @@ public class Controller implements ActionListener, GUIInformation {
 			updateGrid(gridWith, gridHeight);
 		} else if (e.getActionCommand().equals("start_game")) {
 			// TODO: Code to switch to pacman game
+			new Thread(() -> {
+				String args[] = new String[0];
+				Driver.main(args);
+			}).start();
 		}
 	}
 
