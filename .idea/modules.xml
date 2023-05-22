@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/23-SEM1-Assignment2-Template.iml" filepath="$PROJECT_DIR$/.idea/23-SEM1-Assignment2-Template.iml" />
+      <module fileurl="file://$PROJECT_DIR$/2D-Map-Editor-master/2D-Map-Editor-master.iml" filepath="$PROJECT_DIR$/2D-Map-Editor-master/2D-Map-Editor-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pacman/pacman.iml" filepath="$PROJECT_DIR$/pacman/pacman.iml" />
     </modules>
   </component>
 </project>
