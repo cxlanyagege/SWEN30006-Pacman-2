@@ -8,13 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.ArrayDeque;
-import java.util.HashSet;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 
 import javax.swing.JFileChooser;
@@ -24,13 +18,13 @@ import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import src.Driver;
+import src.facade.Facade;
 import src.matachi.mapeditor.grid.Camera;
 import src.matachi.mapeditor.grid.Grid;
 import src.matachi.mapeditor.grid.GridCamera;
 import src.matachi.mapeditor.grid.GridModel;
 import src.matachi.mapeditor.grid.GridView;
 
-import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -64,6 +58,8 @@ public class Controller implements ActionListener, GUIInformation {
 	private int gridHeight = Constants.MAP_HEIGHT;
 	private String currentFileName;
 	private String fileDirectory;
+
+	private Facade facade = new Facade();
 
 	/**
 	 * Construct the controller.
@@ -106,10 +102,11 @@ public class Controller implements ActionListener, GUIInformation {
 		} else if (e.getActionCommand().equals("update")) {
 			updateGrid(gridWith, gridHeight);
 		} else if (e.getActionCommand().equals("start_game")) {
-			// TODO: Code to switch to pacman game
+			//TODO: Code to switch to pacman game
 			new Thread(() -> {
-				String args[] = new String[0];
-				Driver.main(args);
+				//String args[] = new String[0];
+				//Driver.main(args);
+				facade.startGame();
 			}).start();
 		}
 	}
@@ -283,7 +280,9 @@ public class Controller implements ActionListener, GUIInformation {
 					}
 
 					String mapString = model.getMapAsString();
-					System.out.println(mapString);
+					facade.passMapString(mapString);
+					facade.mapLoaded();
+					//System.out.println(mapString);
 					grid.redrawGrid();
 
 					levelCheck();

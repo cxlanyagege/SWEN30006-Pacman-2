@@ -1,6 +1,6 @@
 // PacActor.java
 // Used for PacMan
-package src;
+package src.pacmanGame;
 
 import ch.aplu.jgamegrid.*;
 import java.awt.event.KeyEvent;

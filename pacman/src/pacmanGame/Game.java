@@ -1,19 +1,16 @@
 // PacMan.java
 // Simple PacMan implementation
-package src;
+package src.pacmanGame;
 
 import ch.aplu.jgamegrid.*;
 
 import src.utility.GameCallback;
 
 import java.awt.*;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 import java.util.Properties;
-
-import src.matachi.mapeditor.editor.Controller;
 
 public class Game extends GameGrid
 {
@@ -22,13 +19,17 @@ public class Game extends GameGrid
   protected PacManGameGrid grid = new PacManGameGrid(nbHorzCells, nbVertCells);
 
   protected PacActor pacActor = new PacActor(this);
+
+  //TODO: some level may have mulitple same monsters
   private Monster troll = new Monster(this, MonsterType.Troll);
   private Monster tx5 = new Monster(this, MonsterType.TX5);
 
 
   private ArrayList<Location> pillAndItemLocations = new ArrayList<Location>();
   private ArrayList<Actor> iceCubes = new ArrayList<Actor>();
-  private HashMap<Color, ArrayList<Portal>> portals = new HashMap<Color, ArrayList<Portal>>();
+  private Map<Color, ArrayList<Portal>> portals = new HashMap<Color, ArrayList<Portal>>();
+  private Map<Actor, Portal> actorToLastPortalMap = new HashMap<Actor, Portal>();
+
   private ArrayList<Actor> goldPieces = new ArrayList<Actor>();
   private GameCallback gameCallback;
   private Properties properties;
@@ -371,10 +372,26 @@ public class Game extends GameGrid
     bg.fillCircle(toPoint(location), 5);
 
 
-    Portal portal = new Portal(color,location, "data/i_portalWhiteTile.png");
-    addPortal(portal);
-    addActor(portal, location);
+    if(color.equals(Color.white)){
+      Portal portal = new Portal(color,location, "data/i_portalWhiteTile.png");
+      addPortal(portal);
+      addActor(portal, location);
+    } else if (color.equals(Color.yellow)) {
+      Portal portal = new Portal(color,location, "data/j_portalYellowTile.png");
+      addPortal(portal);
+      addActor(portal, location);
+    } else if (color.equals(Color.orange)) {
+      Portal portal = new Portal(color,location, "data/k_portalDarkGoldTile.png");
+      addPortal(portal);
+      addActor(portal, location);
+    } else if (color.equals(Color.darkGray)) {
+      Portal portal = new Portal(color,location, "data/l_portalDarkGrayTile.png");
+      addPortal(portal);
+      addActor(portal, location);
+    }
   }
+
+
 
 
   public void addPortal(Portal portal) {
@@ -391,28 +408,48 @@ public class Game extends GameGrid
     portalList.add(portal);
   }
 
+
+
+
+
   public void checkAndHandlePortalCollision(Actor actor) {
-    //  Iterate through the list of portals for each color
+    // Iterate through the list of portals for each color
     for (ArrayList<Portal> portalPair : portals.values()) {
       // Check if the length of the list is 2
       if (portalPair.size() != 2) {
         continue;
-      }else{
+      } else {
         // TODO: add error log
       }
+
       Portal portal1 = portalPair.get(0);
       Portal portal2 = portalPair.get(1);
 
-      // If the character is on one portal, move them to the other portal
-      if (actor.getLocation().equals(portal1.getLocation())) {
+      // If the actor is at one portal and is not currently inside any portal, move them to the other portal
+      if (actor.getLocation().equals(portal1.getLocation()) &&
+              actorToLastPortalMap.get(actor) == null) {
         actor.setLocation(portal2.getLocation());
-        break;
-      } else if (actor.getLocation().equals(portal2.getLocation())) {
+        actorToLastPortalMap.put(actor, portal1); // actor is now inside portal1
+      } else if (actor.getLocation().equals(portal2.getLocation()) &&
+              actorToLastPortalMap.get(actor) == null) {
         actor.setLocation(portal1.getLocation());
-        break;
+        actorToLastPortalMap.put(actor, portal2); // actor is now inside portal2
+      } else if (actorToLastPortalMap.get(actor) != null &&
+              !actor.getLocation().equals(portal1.getLocation()) &&
+              !actor.getLocation().equals(portal2.getLocation()) &&
+              !actor.getBackground().getColor(actor.getLocation()).equals(Color.red)
+              ) {
+        // actor is not at any portal but lastPortalMap says they are inside a portal,
+        // this means they have moved away from the portal, so we can reset the portal map entry
+        actorToLastPortalMap.put(actor, null);
       }
     }
   }
+
+
+
+
+
 
 
 
@@ -480,10 +517,12 @@ public class Game extends GameGrid
 
         }
         else if (a == 'g') {//troll
+
           addActor(troll, location);
 
         }
         else if (a == 'h') {//tx5
+
           addActor(tx5, location);
 
         }
@@ -492,12 +531,14 @@ public class Game extends GameGrid
 
         }
         else if (a == 'j') {//portal yellow
+          putPortal(bg, location,Color.yellow);
 
         }
         else if (a == 'k') {//portal dark gold
-
+          putPortal(bg, location,Color.orange);
         }
         else if (a == 'l') {//portal dark gray
+          putPortal(bg, location,Color.darkGray);
 
 
         }

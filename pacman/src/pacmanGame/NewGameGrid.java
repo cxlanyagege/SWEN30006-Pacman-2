@@ -1,7 +1,6 @@
-package src;
+package src.pacmanGame;
 
 import ch.aplu.jgamegrid.*;
-import src.matachi.mapeditor.grid.Grid;
 
 public class NewGameGrid extends PacManGameGrid{
 
