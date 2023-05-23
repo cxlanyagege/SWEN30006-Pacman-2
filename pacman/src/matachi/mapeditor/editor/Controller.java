@@ -45,54 +45,37 @@ import org.jdom.output.XMLOutputter;
  * @since v0.0.5
  * 
  */
+
+
 public class Controller implements ActionListener, GUIInformation {
 
-	/**
-	 * The model of the map editor.
-	 */
 	private Grid model;
-
 	private Tile selectedTile;
 	private Camera camera;
-
 	private List<Tile> tiles;
-
 	private GridView grid;
 	private View view;
-
-	private int gridWith = Constants.MAP_WIDTH;
+	private int gridWidth = Constants.MAP_WIDTH;
 	private int gridHeight = Constants.MAP_HEIGHT;
 	private String currentFileName;
 	private String fileDirectory;
 
-	/**
-	 * Construct the controller.
-	 */
 	public Controller() {
 		init(Constants.MAP_WIDTH, Constants.MAP_HEIGHT);
-
 	}
 
 	public void init(int width, int height) {
 		this.tiles = TileManager.getTilesFromFolder("data/");
 		this.model = new GridModel(width, height, tiles.get(0).getCharacter());
-		this.camera = new GridCamera(model, Constants.GRID_WIDTH,
-				Constants.GRID_HEIGHT);
-
-		grid = new GridView(this, camera, tiles); // Every tile is
-													// 30x30 pixels
-
+		this.camera = new GridCamera(model, Constants.GRID_WIDTH, Constants.GRID_HEIGHT);
+		grid = new GridView(this, camera, tiles);
 		this.view = new View(this, camera, grid, tiles);
 	}
 
-	/**
-	 * Different commands that comes from the view.
-	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		for (Tile t : tiles) {
-			if (e.getActionCommand().equals(
-					Character.toString(t.getCharacter()))) {
+			if (e.getActionCommand().equals(Character.toString(t.getCharacter()))) {
 				selectedTile = t;
 				break;
 			}
@@ -104,9 +87,8 @@ public class Controller implements ActionListener, GUIInformation {
 		} else if (e.getActionCommand().equals("load")) {
 			loadFile();
 		} else if (e.getActionCommand().equals("update")) {
-			updateGrid(gridWith, gridHeight);
+			updateGrid(gridWidth, gridHeight);
 		} else if (e.getActionCommand().equals("start_game")) {
-			// TODO: Code to switch to pacman game
 			new Thread(() -> {
 				String args[] = new String[0];
 				Driver.main(args);
@@ -123,180 +105,105 @@ public class Controller implements ActionListener, GUIInformation {
 	DocumentListener updateSizeFields = new DocumentListener() {
 
 		public void changedUpdate(DocumentEvent e) {
-			gridWith = view.getWidth();
+			gridWidth = view.getWidth();
 			gridHeight = view.getHeight();
 		}
 
 		public void removeUpdate(DocumentEvent e) {
-			gridWith = view.getWidth();
+			gridWidth = view.getWidth();
 			gridHeight = view.getHeight();
 		}
 
 		public void insertUpdate(DocumentEvent e) {
-			gridWith = view.getWidth();
+			gridWidth = view.getWidth();
 			gridHeight = view.getHeight();
 		}
 	};
 
 	private void saveFile() {
-
 		JFileChooser chooser = new JFileChooser();
-		FileNameExtensionFilter filter = new FileNameExtensionFilter(
-				"xml files", "xml");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("XML files", "xml");
 		chooser.setFileFilter(filter);
 		File workingDirectory = new File(System.getProperty("user.dir"));
 		chooser.setCurrentDirectory(workingDirectory);
 
 		int returnVal = chooser.showSaveDialog(null);
-		try {
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				File selectedFile = chooser.getSelectedFile();
-				currentFileName = selectedFile.getName();
-				fileDirectory = selectedFile.getParent();
-				levelCheck();
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			File selectedFile = chooser.getSelectedFile();
+			currentFileName = selectedFile.getName();
+			fileDirectory = selectedFile.getParent();
+			levelCheck();
 
-				Element level = new Element("level");
-				Document doc = new Document(level);
-				doc.setRootElement(level);
-
-				Element size = new Element("size");
-				int height = model.getHeight();
-				int width = model.getWidth();
-				size.addContent(new Element("width").setText(width + ""));
-				size.addContent(new Element("height").setText(height + ""));
-				doc.getRootElement().addContent(size);
-
-				for (int y = 0; y < height; y++) {
-					Element row = new Element("row");
-					for (int x = 0; x < width; x++) {
-						char tileChar = model.getTile(x,y);
-						String type = "PathTile";
-
-						if (tileChar == 'b')
-							type = "WallTile";
-						else if (tileChar == 'c')
-							type = "PillTile";
-						else if (tileChar == 'd')
-							type = "GoldTile";
-						else if (tileChar == 'e')
-							type = "IceTile";
-						else if (tileChar == 'f')
-							type = "PacTile";
-						else if (tileChar == 'g')
-							type = "TrollTile";
-						else if (tileChar == 'h')
-							type = "TX5Tile";
-						else if (tileChar == 'i')
-							type = "PortalWhiteTile";
-						else if (tileChar == 'j')
-							type = "PortalYellowTile";
-						else if (tileChar == 'k')
-							type = "PortalDarkGoldTile";
-						else if (tileChar == 'l')
-							type = "PortalDarkGrayTile";
-
-						Element e = new Element("cell");
-						row.addContent(e.setText(type));
-					}
-					doc.getRootElement().addContent(row);
-				}
-				XMLOutputter xmlOutput = new XMLOutputter();
-				xmlOutput.setFormat(Format.getPrettyFormat());
-				xmlOutput
-						.output(doc, new FileWriter(selectedFile));
-			}
-		} catch (FileNotFoundException e1) {
-			JOptionPane.showMessageDialog(null, "Invalid file!", "error",
-					JOptionPane.ERROR_MESSAGE);
-		} catch (IOException e) {
+			FileComponent fileComponent = new FileComponent(selectedFile.getAbsolutePath());
+			fileComponent.save(model);
 		}
 	}
 
 	public void loadFile() {
-		SAXBuilder builder = new SAXBuilder();
-		try {
-			JFileChooser chooser = new JFileChooser();
-			File selectedFile;
-			BufferedReader in;
-			FileReader reader = null;
-			File workingDirectory = new File(System.getProperty("user.dir"));
-			chooser.setCurrentDirectory(workingDirectory);
+		JFileChooser chooser = new JFileChooser();
+		File workingDirectory = new File(System.getProperty("user.dir"));
+		chooser.setCurrentDirectory(workingDirectory);
+		File selectedFile;
 
-			int returnVal = chooser.showOpenDialog(null);
-			Document document;
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				selectedFile = chooser.getSelectedFile();
-				if (selectedFile.canRead() && selectedFile.exists()) {
-					currentFileName = selectedFile.getName();
-					fileDirectory = selectedFile.getParent();
-					document = (Document) builder.build(selectedFile);
+		int returnVal = chooser.showOpenDialog(null);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			selectedFile = chooser.getSelectedFile();
+			if (selectedFile.canRead() && selectedFile.exists()) {
+				currentFileName = selectedFile.getName();
+				fileDirectory = selectedFile.getParent();
+				FileComponent fileComponent = new FileComponent(selectedFile.getPath());
 
-					Element rootNode = document.getRootElement();
+				fileComponent.load(selectedFile, model);
+				updateGrid(model.getWidth(), model.getHeight());
 
-					List sizeList = rootNode.getChildren("size");
-					Element sizeElem = (Element) sizeList.get(0);
-					int height = Integer.parseInt(sizeElem
-							.getChildText("height"));
-					int width = Integer
-							.parseInt(sizeElem.getChildText("width"));
-					updateGrid(width, height);
+				grid.redrawGrid();
 
-					List rows = rootNode.getChildren("row");
-					for (int y = 0; y < rows.size(); y++) {
-						Element cellsElem = (Element) rows.get(y);
-						List cells = cellsElem.getChildren("cell");
-
-						for (int x = 0; x < cells.size(); x++) {
-							Element cell = (Element) cells.get(x);
-							String cellValue = cell.getText();
-
-							char tileNr = 'a';
-							if (cellValue.equals("PathTile"))
-								tileNr = 'a';
-							else if (cellValue.equals("WallTile"))
-								tileNr = 'b';
-							else if (cellValue.equals("PillTile"))
-								tileNr = 'c';
-							else if (cellValue.equals("GoldTile"))
-								tileNr = 'd';
-							else if (cellValue.equals("IceTile"))
-								tileNr = 'e';
-							else if (cellValue.equals("PacTile"))
-								tileNr = 'f';
-							else if (cellValue.equals("TrollTile"))
-								tileNr = 'g';
-							else if (cellValue.equals("TX5Tile"))
-								tileNr = 'h';
-							else if (cellValue.equals("PortalWhiteTile"))
-								tileNr = 'i';
-							else if (cellValue.equals("PortalYellowTile"))
-								tileNr = 'j';
-							else if (cellValue.equals("PortalDarkGoldTile"))
-								tileNr = 'k';
-							else if (cellValue.equals("PortalDarkGrayTile"))
-								tileNr = 'l';
-							else
-								tileNr = '0';
-
-							model.setTile(x, y, tileNr);
-						}
-					}
-
-					String mapString = model.getMapAsString();
-					System.out.println(mapString);
-					grid.redrawGrid();
-
-					levelCheck();
-				}
+				levelCheck();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		}
+	}
+	/*
+	public void loadFile() {
+		JFileChooser chooser = new JFileChooser();
+		File selectedFile;
+
+		int returnVal = chooser.showOpenDialog(null);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			selectedFile = chooser.getSelectedFile();
+			if (selectedFile.canRead() && selectedFile.exists()) {
+				currentFileName = selectedFile.getName();
+				fileDirectory = selectedFile.getParent();
+
+				if (selectedFile.isDirectory()) {
+					loadFolder(selectedFile);
+				} else {
+					FileComponent fileComponent = new FileComponent(selectedFile.getPath());
+					fileComponent.load(selectedFile, model);
+				}
+
+				updateGrid(model.getWidth(), model.getHeight());
+
+				grid.redrawGrid();
+
+				levelCheck();
+			}
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	private void loadFolder(File folder) {
+		File[] files = folder.listFiles();
+		if (files != null) {
+			for (File file : files) {
+				if (file.isFile()) {
+					FileComponent fileComponent = new FileComponent(file.getPath());
+					fileComponent.load(file, model);
+				} else if (file.isDirectory()) {
+					loadFolder(file);
+				}
+			}
+		}
+	}*/
+
 	@Override
 	public Tile getSelectedTile() {
 		return selectedTile;
@@ -371,8 +278,6 @@ public class Controller implements ActionListener, GUIInformation {
 		return validPortalCount;
 	}
 
-
-
 	private boolean checkGoldAndPillCount() {
 
 		int goldCount = 0;
@@ -399,8 +304,6 @@ public class Controller implements ActionListener, GUIInformation {
 
 		return validCount;
 	}
-
-
 
 	private boolean checkGoldAndPillAccessibility() {
 		// 获取金币和药丸的位置
@@ -495,8 +398,6 @@ public class Controller implements ActionListener, GUIInformation {
 		}
 		return false;
 	}
-
-
 
 	private void writeToLogFile(String message) {
 		try {
