@@ -283,6 +283,7 @@ public class Controller implements ActionListener, GUIInformation {
 					}
 
 					String mapString = model.getMapAsString();
+					System.out.println(mapString);
 					grid.redrawGrid();
 
 					levelCheck();

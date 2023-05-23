@@ -8,6 +8,18 @@ import java.util.Properties;
 public class Driver {
     public static final String DEFAULT_PROPERTIES_PATH = "properties/test2.properties";
 
+    private static String mapString = "aaaaaaaaaabbccccccca\n" +
+            "aaaaaaabbbcccaaaaaca\n" +
+            "aaaaaaabccccaaaaaacc\n" +
+            "aaaaaabbcaaaaaaiaaac\n" +
+            "aaabbbbcaaabbbbbbbbc\n" +
+            "aabccacaajabcccccccc\n" +
+            "aaabacaaaaabbbcbbbbb\n" +
+            "aabbcaaajaaabahaaaaa\n" +
+            "aabcalaaaaaabaaaaaga\n" +
+            "aabaaaaaakaabkaafaaa\n" +
+            "aaabaaaalaaabaaaaaai\n";
+
     /**
      * Starting point
      * @param args the command line arguments
@@ -20,6 +32,8 @@ public class Driver {
         }
         final Properties properties = PropertiesLoader.loadPropertiesFile(propertiesPath);
         GameCallback gameCallback = new GameCallback();
-        new Game(gameCallback, properties);
+        //new Game(gameCallback, properties);
+        new Game(gameCallback, properties, mapString);
+
     }
 }

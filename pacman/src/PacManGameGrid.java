@@ -9,6 +9,12 @@ public class PacManGameGrid
   private int nbVertCells;
   private int[][] mazeArray;
 
+
+  public PacManGameGrid() {
+    // initialize the grid
+  }
+
+
   public PacManGameGrid(int nbHorzCells, int nbVertCells)
   {
     this.nbHorzCells = nbHorzCells;

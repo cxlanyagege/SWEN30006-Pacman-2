@@ -79,7 +79,10 @@ public class Tile {
 	public char getCharacter() {
 		return character;
 	}
-	
+	public String getFilePath() {
+		return filePath;
+	}
+
 	private static BufferedImage deepCopy(BufferedImage bi) {
 		ColorModel cm = bi.getColorModel();
 		boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
