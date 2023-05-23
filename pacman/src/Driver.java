@@ -6,7 +6,7 @@ import src.utility.PropertiesLoader;
 import java.util.Properties;
 
 public class Driver {
-    public static final String DEFAULT_PROPERTIES_PATH = "properties/test2.properties";
+    public static final String DEFAULT_PROPERTIES_PATH = "properties/test.properties";
 
     private static String mapString = "aaaaaaaaaabbccccccca\n" +
             "aaaaaaabbbcccaaaaaca\n" +
@@ -32,8 +32,8 @@ public class Driver {
         }
         final Properties properties = PropertiesLoader.loadPropertiesFile(propertiesPath);
         GameCallback gameCallback = new GameCallback();
-        //new Game(gameCallback, properties);
-        new Game(gameCallback, properties, mapString);
+        new Game(gameCallback, properties);
+        //new Game(gameCallback, properties, mapString);
 
     }
 }
