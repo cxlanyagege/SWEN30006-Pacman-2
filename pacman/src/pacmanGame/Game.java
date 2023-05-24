@@ -7,6 +7,7 @@ import ch.aplu.jgamegrid.*;
 import src.utility.GameCallback;
 
 import java.awt.*;
+import java.beans.IntrospectionException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,8 +23,8 @@ public class Game extends GameGrid {
     //TODO: some level may have mulitple same monsters
     private Monster troll = new Monster(this, MonsterType.Troll);
     private Monster tx5 = new Monster(this, MonsterType.TX5);
-
-
+    private ArrayList<Monster> trolls = new ArrayList<>();
+    private ArrayList<Monster> tx5s = new ArrayList<>();
     private ArrayList<Location> pillAndItemLocations = new ArrayList<Location>();
     private ArrayList<Actor> iceCubes = new ArrayList<Actor>();
     private Map<Color, ArrayList<Portal>> portals = new HashMap<Color, ArrayList<Portal>>();
@@ -62,19 +63,19 @@ public class Game extends GameGrid {
         addKeyRepeatListener(pacActor);
         setKeyRepeatPeriod(150);
 
-        //Setup Random seeds
+        //Setup Random seeds and slow down
         seed = Integer.parseInt(properties.getProperty("seed"));
         pacActor.setSeed(seed);
-        troll.setSeed(seed);
-        tx5.setSeed(seed);
-
-
-        // set slow down
-        troll.setSlowDown(3);
-        tx5.setSlowDown(3);
         pacActor.setSlowDown(3);
-        tx5.stopMoving(5);
-
+        for (Monster troll : trolls) {
+          troll.setSeed(seed);
+          troll.setSlowDown(3);
+        }
+        for (Monster tx5 : tx5s) {
+          tx5.setSeed(seed);
+          tx5.setSlowDown(3);
+          tx5.stopMoving(5);
+        }
 
         //Run the game
         doRun();
@@ -82,22 +83,40 @@ public class Game extends GameGrid {
 
         // Loop to look for collision in the application thread
         // This makes it improbable that we miss a hit
-        boolean hasPacmanBeenHit;
+        boolean hasPacmanBeenHit = false;
         boolean hasPacmanEatAllPills;
         setupItemsLocationsFromMap();
         int maxPillsAndItems = countItemsFromMap();
         System.out.println(maxPillsAndItems);
 
         do {
-            hasPacmanBeenHit = troll.getLocation().equals(pacActor.getLocation()) ||
-                    tx5.getLocation().equals(pacActor.getLocation());
-            hasPacmanBeenHit = false;
+
+            for (Monster troll : trolls) {
+              if (troll.getLocation().equals(pacActor.getLocation())) {
+                hasPacmanBeenHit = true;
+                break;
+              }
+            }
+
+            if (!hasPacmanBeenHit) {
+              for (Monster tx5 : tx5s) {
+                if (tx5.getLocation().equals(pacActor.getLocation())) {
+                  hasPacmanBeenHit = true;
+                  break;
+                }
+              }
+            }
+
             hasPacmanEatAllPills = pacActor.getNbPills() >= maxPillsAndItems;
 
             try {
                 checkAndHandlePortalCollision(pacActor);
-                checkAndHandlePortalCollision(troll);
-                checkAndHandlePortalCollision(tx5);
+                for (Monster troll : trolls) {
+                  checkAndHandlePortalCollision(troll);
+                }
+                for (Monster tx5 : tx5s) {
+                  checkAndHandlePortalCollision(tx5);
+                }
                 Thread.sleep(100);
             } catch (InterruptedException e) {
 
@@ -111,8 +130,12 @@ public class Game extends GameGrid {
 
 
         Location loc = pacActor.getLocation();
-        troll.setStopMoving(true);
-        tx5.setStopMoving(true);
+        for (Monster troll : trolls) {
+          troll.setStopMoving(true);
+        }
+        for (Monster tx5 : tx5s) {
+          tx5.setStopMoving(true);
+        }
         pacActor.removeSelf();
 
         String title = "";
@@ -483,49 +506,33 @@ public class Game extends GameGrid {
                     bg.fillCell(location, Color.lightGray);
                 }
 
-
                 if (a == 'a') { // pathTile
-
 
                 } else if (a == 'c') { // pill
                     putPill(bg, location);
-                    System.out.println(location);
-
-
                 } else if (a == 'd') {//gold
-
                     putGold(bg, location);
-
-
                 } else if (a == 'e') {//ice
                     putIce(bg, location);
-
-
                 } else if (a == 'f') {//pacman
                     addActor(pacActor, location);
-
                 } else if (a == 'g') {//troll
-
+                    Monster troll = new Monster(this, MonsterType.Troll);
                     addActor(troll, location);
-
+                    trolls.add(troll);
                 } else if (a == 'h') {//tx5
-
+                    Monster tx5 = new Monster(this, MonsterType.TX5);
                     addActor(tx5, location);
-
+                    tx5s.add(tx5);
                 } else if (a == 'i') {//portal white
                     putPortal(bg, location, Color.white);
-
                 } else if (a == 'j') {//portal yellow
                     putPortal(bg, location, Color.yellow);
-
                 } else if (a == 'k') {//portal dark gold
                     putPortal(bg, location, Color.orange);
                 } else if (a == 'l') {//portal dark gray
                     putPortal(bg, location, Color.darkGray);
-
-
                 }
-
             }
         }
     }
@@ -563,7 +570,6 @@ public class Game extends GameGrid {
         }
         return pillsAndItemsCount;
     }
-
 
     public int getNumHorzCells() {
         return this.nbHorzCells;
