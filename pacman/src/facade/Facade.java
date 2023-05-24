@@ -5,13 +5,13 @@ import src.matachi.mapeditor.editor.Controller;
 import src.pacmanGame.Game;
 import src.pacmanGame.GameConfig;
 
-
+import java.util.List;
 
 
 public class Facade {
 
     private static Facade instance;
-    private String mapString;
+    private List<String> mapStrings;
 
      private Controller controller;
      private Game game;
@@ -48,18 +48,20 @@ public class Facade {
 
         //game = new Game(gameConfig.getGameCallback(),gameConfig.getProperties(),mapString);
 
-        if(mapLoaded == false){
+        if(!mapLoaded){
 
             game = new Game(gameConfig.getGameCallback(),gameConfig.getProperties());
-        }else{
-            game = new Game(gameConfig.getGameCallback(),gameConfig.getProperties(),mapString);
+        }else if(mapStrings.size() == 1){
+            game = new Game(gameConfig.getGameCallback(),gameConfig.getProperties(),mapStrings.get(0));
 
+        }else{
+            //TODO: implement multiple maps game
         }
 
     }
 
-    public synchronized void passMapString(String mapString){
-        this.mapString = mapString;
+    public synchronized void passMapString(List<String> mapStrings){
+        this.mapStrings = mapStrings;
     }
 
     public synchronized void mapLoaded(){

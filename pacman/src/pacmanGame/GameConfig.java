@@ -9,19 +9,18 @@ public class GameConfig {
     private Properties properties;
     private String mapString;
 
-    private  static GameConfig instance;
+    private static GameConfig instance;
 
 
-    public static GameConfig getInstance(){
-        if(instance == null){
+    public static GameConfig getInstance() {
+        if (instance == null) {
             instance = new GameConfig();
         }
         return instance;
     }
 
-    public GameConfig(){
+    public GameConfig() {
     }
-
 
 
     public GameConfig(GameCallback gameCallback, Properties properties) {
@@ -54,7 +53,7 @@ public class GameConfig {
         //System.out.println("setProperties");
     }
 
-    public void setGameCallBack(GameCallback gameCallback){
+    public void setGameCallBack(GameCallback gameCallback) {
         this.gameCallback = gameCallback;
     }
 

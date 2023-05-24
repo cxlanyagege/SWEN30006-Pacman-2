@@ -1,7 +1,6 @@
 package src;
 
 import src.facade.Facade;
-import src.pacmanGame.Game;
 import src.pacmanGame.GameConfig;
 import src.utility.GameCallback;
 import src.utility.PropertiesLoader;
@@ -22,7 +21,7 @@ public class Driver {
      * @param args the command line arguments
      */
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         String propertiesPath = DEFAULT_PROPERTIES_PATH;
 
 
