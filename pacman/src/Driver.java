@@ -17,18 +17,6 @@ public class Driver {
 
 
 
-//    private static String mapString = "aaaaaaaaaabbccccccca\n" +
-//            "aaaaaaabbbcccaaaaaca\n" +
-//            "aaaaaaabccccaaaaaacc\n" +
-//            "aaaaaabbcaaaaaaiaaac\n" +
-//            "aaabbbbcaaabbbbbbbbc\n" +
-//            "aabccacaajabcccccccc\n" +
-//            "aaabacaaaaabbbcbbbbb\n" +
-//            "aabbcaaajaaabahaaaaa\n" +
-//            "aabcalaaaaaabaaaaaga\n" +
-//            "aabaaaaaakaabkaafaaa\n" +
-//            "aaabaaaalaaabaaaaaai\n";
-
     /**
      * Starting point
      * @param args the command line arguments
@@ -43,7 +31,9 @@ public class Driver {
         }
         properties = PropertiesLoader.loadPropertiesFile(propertiesPath);
 
-        gameConfig = new GameConfig(gameCallback,properties);
+        gameConfig = GameConfig.getInstance();
+        gameConfig.setGameCallBack(gameCallback);
+        gameConfig.setProperties(properties);
 
         Facade facade = Facade.getInstance();
         facade.startEditor();
