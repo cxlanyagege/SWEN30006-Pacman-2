@@ -251,8 +251,7 @@ public class Game extends GameGrid {
         setTitle("[PacMan in the TorusVerse]");
 
         //Setup for auto test
-        pacActor.setPropertyMoves(properties.getProperty("PacMan.move"));
-        //pacActor.setAuto(Boolean.parseBoolean(properties.getProperty("PacMan.isAuto")));
+        pacActor.setAuto(Boolean.parseBoolean(properties.getProperty("PacMan.isAuto")));
 
         //loadMap();
         GGBackground bg = getBg();
@@ -264,7 +263,6 @@ public class Game extends GameGrid {
 
         //Setup Random seeds and slow down
         seed = Integer.parseInt(properties.getProperty("seed"));
-        pacActor.setSeed(seed);
         pacActor.setSlowDown(3);
         for (Monster troll : trolls) {
           troll.setSeed(seed);
@@ -305,6 +303,8 @@ public class Game extends GameGrid {
                 }
               }
             }
+
+            hasPacmanBeenHit = false;
 
             hasPacmanEatAllPills = pacActor.getNbPills() >= maxPillsAndItems;
 
@@ -351,76 +351,6 @@ public class Game extends GameGrid {
 
         doPause();
 
-    }
-
-
-    public Game(GameCallback gameCallback, Properties properties) {
-        //Setup game
-        super(nbHorzCells, nbVertCells, 20, false);
-        this.gameCallback = gameCallback;
-        this.properties = properties;
-        setSimulationPeriod(100);
-        setTitle("[PacMan in the Multiverse]");
-
-        //Setup for auto test
-        pacActor.setPropertyMoves(properties.getProperty("PacMan.move"));
-        pacActor.setAuto(Boolean.parseBoolean(properties.getProperty("PacMan.isAuto")));
-
-        loadPillAndItemsLocations();
-        GGBackground bg = getBg();
-        drawGrid(bg);
-
-
-        //Setup Random seeds
-        seed = Integer.parseInt(properties.getProperty("seed"));
-        pacActor.setSeed(seed);
-        troll.setSeed(seed);
-        tx5.setSeed(seed);
-        addKeyRepeatListener(pacActor);
-        setKeyRepeatPeriod(150);
-        troll.setSlowDown(3);
-        tx5.setSlowDown(3);
-        pacActor.setSlowDown(3);
-        tx5.stopMoving(5);
-        setupActorLocations();
-
-
-        //Run the game
-        doRun();
-        show();
-        // Loop to look for collision in the application thread
-        // This makes it improbable that we miss a hit
-        boolean hasPacmanBeenHit;
-        boolean hasPacmanEatAllPills;
-        setupPillAndItemsLocations();
-        int maxPillsAndItems = countPillsAndItems();
-
-        do {
-            hasPacmanBeenHit = troll.getLocation().equals(pacActor.getLocation()) ||
-                    tx5.getLocation().equals(pacActor.getLocation());
-            hasPacmanEatAllPills = pacActor.getNbPills() >= maxPillsAndItems;
-            delay(10);
-        } while (!hasPacmanBeenHit && !hasPacmanEatAllPills);
-        delay(120);
-
-        Location loc = pacActor.getLocation();
-        troll.setStopMoving(true);
-        tx5.setStopMoving(true);
-        pacActor.removeSelf();
-
-        String title = "";
-        if (hasPacmanBeenHit) {
-            bg.setPaintColor(Color.red);
-            title = "GAME OVER";
-            addActor(new Actor("sprites/explosion3.gif"), loc);
-        } else if (hasPacmanEatAllPills) {
-            bg.setPaintColor(Color.yellow);
-            title = "YOU WIN";
-        }
-        setTitle(title);
-        gameCallback.endOfGame(title);
-
-        doPause();
     }
 
     public GameCallback getGameCallback() {
@@ -580,19 +510,19 @@ public class Game extends GameGrid {
 
 
         if (color.equals(Color.white)) {
-            Portal portal = new Portal(color, location, "data/i_portalWhiteTile.png");
+            Portal portal = new Portal(color, location, "sprites/portal_white.png");
             addPortal(portal);
             addActor(portal, location);
         } else if (color.equals(Color.yellow)) {
-            Portal portal = new Portal(color, location, "data/j_portalYellowTile.png");
+            Portal portal = new Portal(color, location, "sprites/portal_yellow.png");
             addPortal(portal);
             addActor(portal, location);
         } else if (color.equals(Color.orange)) {
-            Portal portal = new Portal(color, location, "data/k_portalDarkGoldTile.png");
+            Portal portal = new Portal(color, location, "sprites/portal_dark_gold.png");
             addPortal(portal);
             addActor(portal, location);
         } else if (color.equals(Color.darkGray)) {
-            Portal portal = new Portal(color, location, "data/l_portalDarkGrayTile.png");
+            Portal portal = new Portal(color, location, "sprites/portal_dark_gray.png");
             addPortal(portal);
             addActor(portal, location);
         }

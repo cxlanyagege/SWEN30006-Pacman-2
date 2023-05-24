@@ -233,7 +233,7 @@ public class Controller implements ActionListener, GUIInformation {
                     this.loadContext.setStrategy(folderLoadStrategy);
 
                     loadContext.load(selectedFile);
-                    //TODO: Game Check
+                    gameCheck(selectedFile);
 
                 } else if (selectedFile.canRead() && selectedFile.exists()) {
                     currentFileName = selectedFile.getName();
@@ -259,6 +259,65 @@ public class Controller implements ActionListener, GUIInformation {
     public Tile getSelectedTile() {
         return selectedTile;
     }
+
+    // Game Checking
+    private void gameCheck(File gameFolder) {
+        File[] mapFiles = gameFolder.listFiles((dir, name) -> name.endsWith(".xml"));
+
+        // 检查是否至少有一个正确命名的地图文件
+        if (mapFiles == null || mapFiles.length == 0) {
+            String message = String.format("[Game %s – no maps found]", gameFolder.getName());
+            System.out.println(message);
+            writeToLogFile(message);
+            return;
+        }
+
+        // 检查地图文件序列是否良好定义
+        checkMapFileSequence(mapFiles);
+    }
+
+    private void checkMapFileSequence(File[] mapFiles) {
+        Map<String, List<String>> mapLevelFiles = new HashMap<>();
+
+        // 将地图文件按等级分组
+        for (File file : mapFiles) {
+            String fileName = file.getName();
+            String level = getLevelFromFileName(fileName);
+
+            List<String> levelFiles = mapLevelFiles.getOrDefault(level, new ArrayList<>());
+            levelFiles.add(fileName);
+            mapLevelFiles.put(level, levelFiles);
+        }
+
+        // 检查每个等级的地图文件数量
+        for (Map.Entry<String, List<String>> entry : mapLevelFiles.entrySet()) {
+            String level = entry.getKey();
+            List<String> levelFiles = entry.getValue();
+
+            if (levelFiles.size() > 1) {
+                String message = String.format("[Game %s – multiple maps at same level: %s]",
+                        currentFileName, String.join("; ", levelFiles));
+                System.out.println(message);
+                writeToLogFile(message);
+            }
+        }
+    }
+
+    private String getLevelFromFileName(String fileName) {
+        StringBuilder levelBuilder = new StringBuilder();
+
+        for (int i = 0; i < fileName.length(); i++) {
+            char ch = fileName.charAt(i);
+            if (Character.isDigit(ch)) {
+                levelBuilder.append(ch);
+            } else {
+                break;
+            }
+        }
+
+        return levelBuilder.toString();
+    }
+
 
     // Level Checking
 
@@ -329,35 +388,26 @@ public class Controller implements ActionListener, GUIInformation {
         return validPortalCount;
     }
 
-
-    private boolean checkGoldAndPillCount() {
-
+    private void checkGoldAndPillCount() {
         int goldCount = 0;
         int pillCount = 0;
         for (int row = 0; row < model.getHeight(); row++) {
             for (int col = 0; col < model.getWidth(); col++) {
                 char tileChar = model.getTile(col, row);
-                if (tileChar == 'd') { // GoldTile
+                if (tileChar == 'd') {
                     goldCount++;
-                } else if (tileChar == 'c') { // PillTile
+                } else if (tileChar == 'c') {
                     pillCount++;
                 }
             }
         }
 
-        boolean validCount = goldCount >= 2 && pillCount >= 2;
-
-        if (!validCount) {
-            String message = String.format("[Level %s – less than 2 Gold and Pill: Gold = %d, Pill = %d]",
+        if (goldCount < 2 || pillCount < 2) {
+            String message = String.format("[Level %s - Insufficient number of Gold or Pill: Gold = %d, Pill = %d]",
                     currentFileName, goldCount, pillCount);
-            System.out.println(message);
             writeToLogFile(message);
         }
-
-        return validCount;
     }
-
-
     private boolean checkGoldAndPillAccessibility() {
         // 获取金币和药丸的位置
         Set<Integer> goldPositions = new HashSet<>();
@@ -376,29 +426,57 @@ public class Controller implements ActionListener, GUIInformation {
             }
         }
 
+        List<Integer> inaccessibleGoldPositions = new ArrayList<>();
+        List<Integer> inaccessiblePillPositions = new ArrayList<>();
+
         // 检查金币的可访问性
         for (int position : goldPositions) {
             if (!isAccessible(position)) {
-                String message = String.format("[Level %s - Gold at position (%d, %d) is not accessible]",
-                        currentFileName, position % model.getWidth(), position / model.getWidth());
-                System.out.println(message);
-                writeToLogFile(message);
-                return false;
+                inaccessibleGoldPositions.add(position);
             }
         }
 
         // 检查药丸的可访问性
         for (int position : pillPositions) {
             if (!isAccessible(position)) {
-                String message = String.format("[Level %s - Pill at position (%d, %d) is not accessible]",
-                        currentFileName, position % model.getWidth(), position / model.getWidth());
-                System.out.println(message);
-                writeToLogFile(message);
-                return false;
+                inaccessiblePillPositions.add(position);
             }
         }
 
-        return true;
+        // 如果存在不可访问的金币位置
+        if(inaccessibleGoldPositions.isEmpty() && inaccessiblePillPositions.isEmpty()) {
+            return true;
+        }
+
+        if (!inaccessibleGoldPositions.isEmpty()) {
+            StringBuilder positionsString = new StringBuilder();
+            for (int position : inaccessibleGoldPositions) {
+                int row = position / model.getWidth();
+                int col = position % model.getWidth();
+                positionsString.append("(").append(col).append(", ").append(row).append("); ");
+            }
+
+            String message = String.format("[Level %s - Gold not accessible: %s]",
+                    currentFileName, positionsString.toString());
+            System.out.println(message);
+            writeToLogFile(message);
+        }
+
+        if (!inaccessiblePillPositions.isEmpty()) {// 如果存在不可访问的药丸位置
+            StringBuilder positionsString = new StringBuilder();
+            for (int position : inaccessiblePillPositions) {
+                int row = position / model.getWidth();
+                int col = position % model.getWidth();
+                positionsString.append("(").append(col).append(", ").append(row).append("); ");
+            }
+
+            String message = String.format("[Level %s - Pill not accessible: %s]",
+                    currentFileName, positionsString.toString());
+            System.out.println(message);
+            writeToLogFile(message);
+        }
+
+        return false;
     }
 
     private boolean isAccessible(int startPosition) {
@@ -439,29 +517,72 @@ public class Controller implements ActionListener, GUIInformation {
     }
 
     private boolean isAccessibleTile(int col, int row, boolean[] visited, Queue<Integer> queue) {
-        if (!visited[row * model.getWidth() + col]) {
+        int position = row * model.getWidth() + col;
+        if (!visited[position]) {
             char tileChar = model.getTile(col, row);
-            if (tileChar == 'a' || tileChar == 'c' || tileChar == 'd' || tileChar == 'e' || tileChar == 'f') {
-                visited[row * model.getWidth() + col] = true;
-                queue.offer(row * model.getWidth() + col);
-            }
-            if (tileChar == 'f') {
-                return true; // 找到可访问的位置
+            if (tileChar == 'a' || tileChar == 'c' || tileChar == 'd' || tileChar == 'e' || tileChar == 'f' || isPortal(tileChar)) {
+                visited[position] = true;
+                queue.offer(position);
+
+                if (isPortal(tileChar)) {
+                    // 获取对应传送门的位置
+                    int pairPosition = getPortalPairPosition(tileChar);
+                    if (pairPosition != -1 && !visited[pairPosition]) {
+                        System.out.println(queue);
+                        queue.offer(pairPosition);
+                        System.out.println(queue);
+                        //visited[pairPosition] = true;
+                    }
+                }
+
+                if (tileChar == 'f') {
+                    return true; // 找到可访问的位置
+                }
             }
         }
         return false;
     }
 
+    private boolean isPortal(char tileChar) {
+        return tileChar == 'i' || tileChar == 'j' || tileChar == 'k' || tileChar == 'l';
+    }
+
+    private int getPortalPairPosition(char portalChar) {
+        boolean firstPortalFound = false;
+        for (int row = 0; row < model.getHeight(); row++) {
+            for (int col = 0; col < model.getWidth(); col++) {
+                char tileChar = model.getTile(col, row);
+                if (tileChar == portalChar) {
+                    if (firstPortalFound) {
+                        return row * model.getWidth() + col;
+                    }
+                    firstPortalFound = true;
+                }
+            }
+        }
+        return -1; // 返回 -1 表示未找到对应的传送门
+    }
+
+
 
     private void writeToLogFile(String message) {
         try {
-            String logFileName = currentFileName + "_log.txt"; // log文件名为当前文件名加上后缀.log
-            FileWriter writer = new FileWriter(new File(fileDirectory, logFileName), true);
+            String logDirectoryName = "logDocument"; // 日志文件夹名称
+            File logDirectory = new File(System.getProperty("user.dir"), logDirectoryName);
+            if (!logDirectory.exists()) {
+                logDirectory.mkdir(); // 创建日志文件夹
+            }
+
+            String logFileName = currentFileName + "_log.txt"; // 日志文件名为当前文件名加上后缀.log
+            File logFile = new File(logDirectory, logFileName);
+
+            FileWriter writer = new FileWriter(logFile, true);
             writer.write(message + "\n");
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
 }
