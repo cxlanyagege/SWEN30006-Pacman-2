@@ -54,7 +54,7 @@ public class Game extends GameGrid
 
     //Setup for auto test
     pacActor.setPropertyMoves(properties.getProperty("PacMan.move"));
-    //pacActor.setAuto(Boolean.parseBoolean(properties.getProperty("PacMan.isAuto")));
+    pacActor.setAuto(Boolean.parseBoolean(properties.getProperty("PacMan.isAuto")));
 
     //loadMap();
     GGBackground bg = getBg();
