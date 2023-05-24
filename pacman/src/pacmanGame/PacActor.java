@@ -21,12 +21,18 @@ public class PacActor extends Actor implements GGKeyRepeatListener
   private int seed;
   private Random randomiser = new Random();
   private List<Location> pillAndItemLocations;
+
+
+
   public PacActor(Game game)
   {
     super(true, "sprites/pacpix.gif", nbSprites);  // Rotatable
     this.game = game;
   }
   private boolean isAuto = false;
+
+
+
 
   public void setAuto(boolean auto) {
     isAuto = auto;
@@ -140,7 +146,7 @@ public class PacActor extends Actor implements GGKeyRepeatListener
       }
     }
 
-    System.out.println("No more pills");
+    //System.out.println("No more pills");
     return null;
   }
 
@@ -177,8 +183,12 @@ public class PacActor extends Actor implements GGKeyRepeatListener
   }
 
   public int getNbPills() {
-    System.out.println("Current eat pill: " + nbPills);
+    //System.out.println("Current eat pill: " + nbPills);
     return nbPills;
+  }
+
+  public void setNbPills(int nbPills) {
+    this.nbPills = nbPills;
   }
 
   private void eatPill(Location location)

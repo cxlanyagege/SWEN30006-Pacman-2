@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.List;
+
 
 public class Game extends GameGrid {
     private final static int nbHorzCells = 20;
@@ -36,17 +38,214 @@ public class Game extends GameGrid {
     private int seed = 30006;
     private ArrayList<Location> propertyPillLocations = new ArrayList<>();
     private ArrayList<Location> propertyGoldLocations = new ArrayList<>();
-
+    private int currentMapIndex;
 
     protected NewGameGrid newGrid;
+    protected List<NewGameGrid> grids = new ArrayList<>();
+    protected NewGameGrid currentGrid;
+    private boolean pacActorAdded = false;
+
+
+
+
+
+    public Game(GameCallback gameCallback, Properties properties, List<String> mapStrings) {
+        // Setup game
+        super(nbHorzCells, nbVertCells, 20, false);
+        this.gameCallback = gameCallback;
+        this.properties = properties;
+        currentMapIndex = 0;
+        PacActor panMan = new PacActor(this);
+
+
+        // Create NewGameGrid objects for each mapString
+        for (String mapString : mapStrings) {
+            currentGrid = new NewGameGrid(mapString);
+            grids.add(currentGrid);
+        }
+
+        // TODO: remove sout
+        System.out.println("num of grids: " + grids.size());
+
+        currentGrid = grids.get(currentMapIndex);
+
+
+
+
+        setSimulationPeriod(100);
+        setTitle("[PacMan in the TorusVerse]");
+
+        // Setup for auto test
+        pacActor.setPropertyMoves(properties.getProperty("PacMan.move"));
+        pacActor.setAuto(Boolean.parseBoolean(properties.getProperty("PacMan.isAuto")));
+
+        // loadMap();
+        //TODO: load map from mapStrings
+        GGBackground bg = getBg();
+        drawGridFromMap(bg);
+
+        // pacman keyPad listener
+        addKeyRepeatListener(pacActor);
+        setKeyRepeatPeriod(150);
+
+        // Setup Random seeds and slow down
+        seed = Integer.parseInt(properties.getProperty("seed"));
+        pacActor.setSeed(seed);
+        pacActor.setSlowDown(3);
+        for (Monster troll : trolls) {
+            troll.setSeed(seed);
+            troll.setSlowDown(3);
+        }
+        for (Monster tx5 : tx5s) {
+            tx5.setSeed(seed);
+            tx5.setSlowDown(3);
+            tx5.stopMoving(5);
+        }
+
+        // Run the game
+        doRun();
+        show();
+
+        // Loop to look for collision in the application thread
+        // This makes it improbable that we miss a hit
+        boolean hasPacmanBeenHit = false;
+        boolean hasPacmanEatAllPills;
+        setupItemsLocationsFromMap();
+        int maxPillsAndItems = countItemsFromMap();
+
+        //TODO: remove sout
+        System.out.println(maxPillsAndItems);
+
+        boolean hasCompletedAllMaps = false;
+
+        do {
+
+            hasPacmanEatAllPills = pacActor.getNbPills() >= maxPillsAndItems;
+
+            // If completed one map begin the next map
+
+            if (hasPacmanEatAllPills) {
+
+                for (Actor actor : getActors()) {
+                    if (actor != pacActor) {
+                        actor.removeSelf();
+                    }
+                }
+
+                trolls.clear();
+                tx5s.clear();
+                portals.clear();
+                goldPieces.clear();
+                iceCubes.clear();
+                pillAndItemLocations.clear();
+
+
+                bg.clear();
+                refresh();
+
+
+
+                if (currentMapIndex < mapStrings.size() - 1) {
+                    currentMapIndex++;
+                    currentGrid = grids.get(currentMapIndex);
+
+
+                    drawGridFromMap(bg);
+                    pacActor.setNbPills(0);
+                    setupItemsLocationsFromMap();
+                    maxPillsAndItems = countItemsFromMap();
+
+
+                } else {
+                    hasCompletedAllMaps = true;
+                }
+            }
+
+
+
+
+
+
+//            for (Monster troll : trolls) {
+//                if (troll.getLocation().equals(pacActor.getLocation())) {
+//                    hasPacmanBeenHit = true;
+//                    break;
+//                }
+//            }
+//
+//            if (!hasPacmanBeenHit) {
+//                for (Monster tx5 : tx5s) {
+//                    if (tx5.getLocation().equals(pacActor.getLocation())) {
+//                        hasPacmanBeenHit = true;
+//                        break;
+//                    }
+//                }
+//            }
+
+            if(portals.size() !=0){
+                try {
+                    checkAndHandlePortalCollision(pacActor);
+                    for (Monster troll : trolls) {
+                        checkAndHandlePortalCollision(troll);
+                    }
+                    for (Monster tx5 : tx5s) {
+                        checkAndHandlePortalCollision(tx5);
+                    }
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+
+                    e.printStackTrace();
+                }
+
+                delay(10);
+
+            }
+
+
+        } while (!hasPacmanBeenHit && !hasCompletedAllMaps);
+        delay(120);
+
+
+
+
+        Location loc = pacActor.getLocation();
+        for (Monster troll : trolls) {
+            troll.setStopMoving(true);
+        }
+        for (Monster tx5 : tx5s) {
+            tx5.setStopMoving(true);
+        }
+        pacActor.removeSelf();
+
+        String title = "";
+        if (hasPacmanBeenHit) {
+            getBg().setPaintColor(Color.red);
+            title = "GAME OVER";
+            addActor(new Actor("sprites/explosion3.gif"), loc);
+        } else if (hasCompletedAllMaps) {
+            getBg().setPaintColor(Color.yellow);
+            title = "YOU WIN";
+        }
+        setTitle(title);
+        gameCallback.endOfGame(title);
+
+        doPause();
+
+
+    }
 
     public Game(GameCallback gameCallback, Properties properties, String mapString) {
         //Setup game
         super(nbHorzCells, nbVertCells, 20, false);
         this.gameCallback = gameCallback;
         this.properties = properties;
+        currentMapIndex = 0;
 
-        newGrid = new NewGameGrid(mapString);
+        currentGrid = new NewGameGrid(mapString);
+        grids.add(currentGrid);
+
+        // TODO: remove sout
+        System.out.println("num of grids: " + grids.size());
 
         setSimulationPeriod(100);
         setTitle("[PacMan in the TorusVerse]");
@@ -491,13 +690,14 @@ public class Game extends GameGrid {
     public void drawGridFromMap(GGBackground bg) {
 
 
-        bg.setPaintColor(Color.white);
+        //bg.setPaintColor(Color.white);
 
         for (int y = 0; y < nbVertCells; y++) {
             for (int x = 0; x < nbHorzCells; x++) {
                 bg.setPaintColor(Color.white);
                 Location location = new Location(x, y);
-                char a = newGrid.getCellChar(location);
+                char a = currentGrid.getCellChar(location);
+                System.out.println(location);
 
 
                 if (a == 'b') {
@@ -515,7 +715,16 @@ public class Game extends GameGrid {
                 } else if (a == 'e') {//ice
                     putIce(bg, location);
                 } else if (a == 'f') {//pacman
-                    addActor(pacActor, location);
+                    if(!pacActorAdded){
+                        addActor(pacActor, location);
+                        pacActorAdded = true;
+                    }else {
+                        pacActor.setLocation(location);
+                    }
+
+
+
+
                 } else if (a == 'g') {//troll
                     Monster troll = new Monster(this, MonsterType.Troll);
                     addActor(troll, location);
@@ -537,11 +746,13 @@ public class Game extends GameGrid {
         }
     }
 
+
+
     private void setupItemsLocationsFromMap() {
         for (int y = 0; y < nbVertCells; y++) {
             for (int x = 0; x < nbHorzCells; x++) {
                 Location location = new Location(x, y);
-                char a = newGrid.getCellChar(location);
+                char a = currentGrid.getCellChar(location);
 
                 if (a == 'c') { // pill
                     pillAndItemLocations.add(location);
@@ -559,7 +770,7 @@ public class Game extends GameGrid {
         for (int y = 0; y < nbVertCells; y++) {
             for (int x = 0; x < nbHorzCells; x++) {
                 Location location = new Location(x, y);
-                char a = newGrid.getCellChar(location);
+                char a = currentGrid.getCellChar(location);
 
                 if (a == 'c') { // pill
                     pillsAndItemsCount++;

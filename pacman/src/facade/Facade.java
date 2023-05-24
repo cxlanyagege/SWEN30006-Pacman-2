@@ -58,6 +58,7 @@ public class Facade {
         }else{
             //TODO: implement multiple maps game
             System.out.println(mapStrings);
+            game = new Game(gameConfig.getGameCallback(),gameConfig.getProperties(),mapStrings);
         }
 
     }
