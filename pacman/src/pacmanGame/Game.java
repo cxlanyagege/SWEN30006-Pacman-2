@@ -94,6 +94,7 @@ public class Game extends GameGrid
     do {
       hasPacmanBeenHit = troll.getLocation().equals(pacActor.getLocation()) ||
               tx5.getLocation().equals(pacActor.getLocation());
+      hasPacmanBeenHit = false;
       hasPacmanEatAllPills = pacActor.getNbPills() >= maxPillsAndItems;
 
       try {
@@ -446,13 +447,27 @@ public class Game extends GameGrid
     }
   }
 
+  // Get portal from specific location
+  public Portal getPortalAt(Location location) {
+    for (ArrayList<Portal> portalPair : portals.values()) {
+      for (Portal portal : portalPair) {
+        if (portal.getLocation().equals(location)) {
+          return portal;
+        }
+      }
+    }
+    return null;
+  }
 
-
-
-
-
-
-
+  // Get the other portal from one portal
+  public Portal getOtherPortalEnd(Portal portal) {
+    ArrayList<Portal> portalPair = portals.get(portal.getColor());
+    if (portalPair.get(0).equals(portal)) {
+      return portalPair.get(1);
+    } else {
+      return portalPair.get(0);
+    }
+  }
 
   public void removeItem(String type,Location location){
     if(type.equals("gold")){
@@ -508,7 +523,7 @@ public class Game extends GameGrid
 
         }
         else if (a == 'e') {//ice
-          putPill(bg, location);
+          putIce(bg, location);
 
 
         }

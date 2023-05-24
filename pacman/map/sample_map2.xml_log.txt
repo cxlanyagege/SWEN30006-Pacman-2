@@ -1,4 +1,0 @@
-[Level sample_map2.xml – no start or more than one start for PacMan: ]
-[Level sample_map2.xml - portal count is not as expected: Portal White = 0 [], Portal Yellow = 0 [], Portal Dark Gold = 0 [], Portal Dark Gray = 0 []]
-[Level sample_map2.xml – less than 2 Gold and Pill: Gold = 0, Pill = 0]
-[Level sample_map2.xml - portal count is not as expected: Portal White = 0 [], Portal Yellow = 0 [], Portal Dark Gold = 0 [], Portal Dark Gray = 0 []]

@@ -118,6 +118,19 @@ public class PacActor extends Actor implements GGKeyRepeatListener
         int x = current.getX() + dir[0];
         int y = current.getY() + dir[1];
         Location next = new Location(x, y);
+
+        // Check if there is portal at current position
+        Portal portal = game.getPortalAt(current);
+        if (portal != null) {
+          // Find the other side
+          Location portalOtherEnd = game.getOtherPortalEnd(portal).getLocation();
+          if (!visited[portalOtherEnd.getX()][portalOtherEnd.getY()]) {
+            queue.offer(portalOtherEnd);
+            visited[portalOtherEnd.getX()][portalOtherEnd.getY()] = true;
+            pathTo.put(portalOtherEnd, current);
+          }
+        }
+
         if (x >= 0 && x < game.getNumHorzCells() && y >= 0 && y < game.getNumVertCells()
                 && canMove(next) && !visited[x][y]) {
           queue.offer(next);
@@ -126,6 +139,8 @@ public class PacActor extends Actor implements GGKeyRepeatListener
         }
       }
     }
+
+    System.out.println("No more pills");
     return null;
   }
 
@@ -140,33 +155,8 @@ public class PacActor extends Actor implements GGKeyRepeatListener
     return false;
   }
 
-  private void followPropertyMoves() {
-    String currentMove = propertyMoves.get(propertyMoveIndex);
-    switch(currentMove) {
-      case "R":
-        turn(90);
-        break;
-      case "L":
-        turn(-90);
-        break;
-      case "M":
-        Location next = getNextMoveLocation();
-        if (canMove(next)) {
-          setLocation(next);
-          eatPill(next);
-        }
-        break;
-    }
-    propertyMoveIndex++;
-  }
-
   // Auto move main handle
   private void moveInAutoMode() {
-    if (propertyMoves.size() > propertyMoveIndex) {
-      followPropertyMoves();
-      return;
-    }
-
     Location[] closestPillAndFirstStep = closestPillLocation();
     if (closestPillAndFirstStep != null) {
       Location firstStep = closestPillAndFirstStep[1];
@@ -174,21 +164,6 @@ public class PacActor extends Actor implements GGKeyRepeatListener
       setLocation(firstStep);
       eatPill(firstStep);
     }
-  }
-
-  private void addVisitedList(Location location)
-  {
-    visitedList.add(location);
-    if (visitedList.size() == listLength)
-      visitedList.remove(0);
-  }
-
-  private boolean isVisited(Location location)
-  {
-    for (Location loc : visitedList)
-      if (loc.equals(location))
-        return true;
-    return false;
   }
 
   boolean canMove(Location location)
@@ -202,6 +177,7 @@ public class PacActor extends Actor implements GGKeyRepeatListener
   }
 
   public int getNbPills() {
+    System.out.println("Current eat pill: " + nbPills);
     return nbPills;
   }
 
