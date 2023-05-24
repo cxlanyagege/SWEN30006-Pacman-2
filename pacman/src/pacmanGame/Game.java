@@ -41,7 +41,6 @@ public class Game extends GameGrid
   protected NewGameGrid newGrid;
 
   public Game(GameCallback gameCallback, Properties properties,String mapString) {
-
     //Setup game
     super(nbHorzCells, nbVertCells, 20, false);
     this.gameCallback = gameCallback;
@@ -88,12 +87,14 @@ public class Game extends GameGrid
     // This makes it improbable that we miss a hit
     boolean hasPacmanBeenHit;
     boolean hasPacmanEatAllPills;
-    setupPillAndItemsLocations();
-    int maxPillsAndItems = countPillsAndItems();
+    setupItemsLocationsFromMap();
+    int maxPillsAndItems = countItemsFromMap();
+    System.out.println(maxPillsAndItems);
 
     do {
       hasPacmanBeenHit = troll.getLocation().equals(pacActor.getLocation()) ||
               tx5.getLocation().equals(pacActor.getLocation());
+      hasPacmanBeenHit = false;
       hasPacmanEatAllPills = pacActor.getNbPills() >= maxPillsAndItems;
 
       try {
@@ -446,13 +447,27 @@ public class Game extends GameGrid
     }
   }
 
+  // Get portal from specific location
+  public Portal getPortalAt(Location location) {
+    for (ArrayList<Portal> portalPair : portals.values()) {
+      for (Portal portal : portalPair) {
+        if (portal.getLocation().equals(location)) {
+          return portal;
+        }
+      }
+    }
+    return null;
+  }
 
-
-
-
-
-
-
+  // Get the other portal from one portal
+  public Portal getOtherPortalEnd(Portal portal) {
+    ArrayList<Portal> portalPair = portals.get(portal.getColor());
+    if (portalPair.get(0).equals(portal)) {
+      return portalPair.get(1);
+    } else {
+      return portalPair.get(0);
+    }
+  }
 
   public void removeItem(String type,Location location){
     if(type.equals("gold")){
@@ -508,7 +523,7 @@ public class Game extends GameGrid
 
         }
         else if (a == 'e') {//ice
-          putPill(bg, location);
+          putIce(bg, location);
 
 
         }
@@ -545,6 +560,45 @@ public class Game extends GameGrid
 
       }
     }
+  }
+
+  private void setupItemsLocationsFromMap() {
+    for (int y = 0; y < nbVertCells; y++)
+    {
+      for (int x = 0; x < nbHorzCells; x++)
+      {
+        Location location = new Location(x, y);
+        char a = newGrid.getCellChar(location);
+
+        if (a == 'c' ) { // pill
+          pillAndItemLocations.add(location);
+        } else if (a == 'd') {//gold
+          pillAndItemLocations.add(location);
+        }
+        else if (a == 'e') {//ice
+          pillAndItemLocations.add(location);
+        }
+      }
+    }
+  }
+
+  private int countItemsFromMap() {
+    int pillsAndItemsCount = 0;
+    for (int y = 0; y < nbVertCells; y++)
+    {
+      for (int x = 0; x < nbHorzCells; x++)
+      {
+        Location location = new Location(x, y);
+        char a = newGrid.getCellChar(location);
+
+        if (a == 'c' ) { // pill
+          pillsAndItemsCount++;
+        } else if (a == 'd') {//gold
+          pillsAndItemsCount++;
+        }
+      }
+    }
+    return pillsAndItemsCount;
   }
 
 

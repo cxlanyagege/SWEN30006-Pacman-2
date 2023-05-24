@@ -21,7 +21,6 @@ public class PacActor extends Actor implements GGKeyRepeatListener
   private int seed;
   private Random randomiser = new Random();
   private List<Location> pillAndItemLocations;
-  private Queue<Location> pathToClosestPill = new LinkedList<>();
   public PacActor(Game game)
   {
     super(true, "sprites/pacpix.gif", nbSprites);  // Rotatable
@@ -80,60 +79,6 @@ public class PacActor extends Actor implements GGKeyRepeatListener
     }
   }
 
-  // Use A* search to get to pills
-  private Queue<Location> aStarSearch(Location start, Location goal) {
-    List<Node> openList = new ArrayList<>();
-    List<Location> closedList = new ArrayList<>();
-    openList.add(new Node(start, null, 0, start.getDistanceTo(goal)));
-
-    while (!openList.isEmpty()) {
-      // Get node in open list with smallest fCost
-      Node current = openList.stream()
-              .min(Comparator.comparingDouble(Node::fCost))
-              .orElseThrow(RuntimeException::new);
-
-      // Check goal and reconstruct the path
-      if (current.location.equals(goal)) {
-        Queue<Location> path = new LinkedList<>();
-        while (current.parent != null) {
-          path.add(current.location);
-          current = current.parent;
-        }
-        return path;
-      }
-
-      // Add location to closed list
-      openList.remove(current);
-      closedList.add(current.location);
-
-      // Generate child nodes
-      for (int[] direction : new int[][]{{0, 1}, {1, 0}, {0, -1}, {-1, 0}}) {
-        Location childLocation = new Location(
-                current.location.getX() + direction[0],
-                current.location.getY() + direction[1]);
-        if (!canMove(childLocation) || closedList.contains(childLocation)) {
-          continue;
-        }
-        double gCost = current.gCost + 1; // Assuming cost for moving to each cell is 1
-        double hCost = childLocation.getDistanceTo(goal);
-        Node childNode = new Node(childLocation, current, gCost, hCost);
-        // If child node is in open list and has larger fCost, then skip this child
-        if (openList.stream().anyMatch(node -> node.location.equals(childLocation) && childNode.fCost() >= node.fCost())) {
-          continue;
-        }
-        openList.add(childNode);
-      }
-
-      for (Node node : openList) {
-        System.out.println(node.location);
-      }
-
-    }
-
-    // Cannot fina a path
-    return new LinkedList<>();
-  }
-
   public void act()
   {
     show(idSprite);
@@ -142,8 +87,6 @@ public class PacActor extends Actor implements GGKeyRepeatListener
       idSprite = 0;
 
     if (isAuto) {
-      //moveInAutoLegacy();
-      //moveInAutoAStar();
       moveInAutoMode();
     }
     this.game.getGameCallback().pacManLocationChanged(getLocation(), score, nbPills);
@@ -175,6 +118,19 @@ public class PacActor extends Actor implements GGKeyRepeatListener
         int x = current.getX() + dir[0];
         int y = current.getY() + dir[1];
         Location next = new Location(x, y);
+
+        // Check if there is portal at current position
+        Portal portal = game.getPortalAt(current);
+        if (portal != null) {
+          // Find the other side
+          Location portalOtherEnd = game.getOtherPortalEnd(portal).getLocation();
+          if (!visited[portalOtherEnd.getX()][portalOtherEnd.getY()]) {
+            queue.offer(portalOtherEnd);
+            visited[portalOtherEnd.getX()][portalOtherEnd.getY()] = true;
+            pathTo.put(portalOtherEnd, current);
+          }
+        }
+
         if (x >= 0 && x < game.getNumHorzCells() && y >= 0 && y < game.getNumVertCells()
                 && canMove(next) && !visited[x][y]) {
           queue.offer(next);
@@ -183,6 +139,8 @@ public class PacActor extends Actor implements GGKeyRepeatListener
         }
       }
     }
+
+    System.out.println("No more pills");
     return null;
   }
 
@@ -197,107 +155,8 @@ public class PacActor extends Actor implements GGKeyRepeatListener
     return false;
   }
 
-  private void followPropertyMoves() {
-    String currentMove = propertyMoves.get(propertyMoveIndex);
-    switch(currentMove) {
-      case "R":
-        turn(90);
-        break;
-      case "L":
-        turn(-90);
-        break;
-      case "M":
-        Location next = getNextMoveLocation();
-        if (canMove(next)) {
-          setLocation(next);
-          eatPill(next);
-        }
-        break;
-    }
-    propertyMoveIndex++;
-  }
-
-//  private void moveInAutoLegacy() {
-//
-//    // Use walking sequence in property file
-//    if (propertyMoves.size() > propertyMoveIndex) {
-//      followPropertyMoves();
-//      return;
-//    }
-//
-//    // Get closest pill location
-//    Location closestPill = closestPillLocation();
-//    double oldDirection = getDirection();
-//
-//    // Set direction to the closest pill
-//    Location.CompassDirection compassDir =
-//            getLocation().get4CompassDirectionTo(closestPill);
-//    Location next = getLocation().getNeighbourLocation(compassDir);
-//    setDirection(compassDir);
-//
-//    // Move to the closest pill
-//    if (!isVisited(next) && canMove(next)) {
-//      setLocation(next);
-//    } else {
-//      // normal movement
-//      int sign = randomiser.nextDouble() < 0.5 ? 1 : -1;
-//      setDirection(oldDirection);
-//      turn(sign * 90);  // Try to turn left/right
-//      next = getNextMoveLocation();
-//      if (canMove(next)) {
-//        setLocation(next);
-//      } else {
-//        setDirection(oldDirection);
-//        next = getNextMoveLocation();
-//        if (canMove(next)) // Try to move forward
-//        {
-//          setLocation(next);
-//        } else {
-//          setDirection(oldDirection);
-//          turn(-sign * 90);  // Try to turn right/left
-//          next = getNextMoveLocation();
-//          if (canMove(next)) {
-//            setLocation(next);
-//          } else {
-//            setDirection(oldDirection);
-//            turn(180);  // Turn backward
-//            next = getNextMoveLocation();
-//            setLocation(next);
-//          }
-//        }
-//      }
-//    }
-//    eatPill(next);
-//    addVisitedList(next);
-//  }
-
-//  private void moveInAutoAStar() {
-//    // get the next move from pathToClosestPill
-//    Location next = pathToClosestPill.poll();
-//
-//    // if next is null, it means the path has been exhausted or not yet calculated,
-//    // so we calculate a new path to the closest pill/gold
-//    if (next == null) {
-//      Location closestPill = closestPillLocation();
-//      pathToClosestPill = aStarSearch(getLocation(), closestPill);
-//      // after calculation, get the next move again
-//      next = pathToClosestPill.poll();
-//    }
-//
-//    // now we got the next move, move to it if it's valid
-//    if (next != null && canMove(next)) {
-//      setLocation(next);
-//      eatPill(next);
-//    }
-//  }
-
   // Auto move main handle
   private void moveInAutoMode() {
-    if (propertyMoves.size() > propertyMoveIndex) {
-      followPropertyMoves();
-      return;
-    }
-
     Location[] closestPillAndFirstStep = closestPillLocation();
     if (closestPillAndFirstStep != null) {
       Location firstStep = closestPillAndFirstStep[1];
@@ -305,21 +164,6 @@ public class PacActor extends Actor implements GGKeyRepeatListener
       setLocation(firstStep);
       eatPill(firstStep);
     }
-  }
-
-  private void addVisitedList(Location location)
-  {
-    visitedList.add(location);
-    if (visitedList.size() == listLength)
-      visitedList.remove(0);
-  }
-
-  private boolean isVisited(Location location)
-  {
-    for (Location loc : visitedList)
-      if (loc.equals(location))
-        return true;
-    return false;
   }
 
   boolean canMove(Location location)
@@ -333,6 +177,7 @@ public class PacActor extends Actor implements GGKeyRepeatListener
   }
 
   public int getNbPills() {
+    System.out.println("Current eat pill: " + nbPills);
     return nbPills;
   }
 
