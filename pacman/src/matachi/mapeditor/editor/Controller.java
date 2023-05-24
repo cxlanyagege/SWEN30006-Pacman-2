@@ -172,30 +172,22 @@ public class Controller implements ActionListener, GUIInformation {
                     Element row = new Element("row");
                     for (int x = 0; x < width; x++) {
                         char tileChar = model.getTile(x, y);
-                        String type = "PathTile";
 
-                        if (tileChar == 'b')
-                            type = "WallTile";
-                        else if (tileChar == 'c')
-                            type = "PillTile";
-                        else if (tileChar == 'd')
-                            type = "GoldTile";
-                        else if (tileChar == 'e')
-                            type = "IceTile";
-                        else if (tileChar == 'f')
-                            type = "PacTile";
-                        else if (tileChar == 'g')
-                            type = "TrollTile";
-                        else if (tileChar == 'h')
-                            type = "TX5Tile";
-                        else if (tileChar == 'i')
-                            type = "PortalWhiteTile";
-                        else if (tileChar == 'j')
-                            type = "PortalYellowTile";
-                        else if (tileChar == 'k')
-                            type = "PortalDarkGoldTile";
-                        else if (tileChar == 'l')
-                            type = "PortalDarkGrayTile";
+                        String type = switch (tileChar) {
+                            case 'b' -> "WallTile";
+                            case 'c' -> "PillTile";
+                            case 'd' -> "GoldTile";
+                            case 'e' -> "IceTile";
+                            case 'f' -> "PacTile";
+                            case 'g' -> "TrollTile";
+                            case 'h' -> "TX5Tile";
+                            case 'i' -> "PortalWhiteTile";
+                            case 'j' -> "PortalYellowTile";
+                            case 'k' -> "PortalDarkGoldTile";
+                            case 'l' -> "PortalDarkGrayTile";
+                            default -> "PathTile";
+                        };
+
 
                         Element e = new Element("cell");
                         row.addContent(e.setText(type));
@@ -231,9 +223,31 @@ public class Controller implements ActionListener, GUIInformation {
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 selectedFile = chooser.getSelectedFile();
-                if(selectedFile.isDirectory()){
+                if(selectedFile.exists() && selectedFile.isDirectory()){
                     //TODO: Code to load map from directory and start game
                     System.out.println("Directory selected");
+                    File [] files = selectedFile.listFiles();
+                    List<Document> documents = new ArrayList<>();
+                    if (files != null) {
+                        for (File file : files) {
+                            if (file.isFile() && file.getName().endsWith(".xml")) {
+                                Document document = builder.build(file);
+                                if (document != null) {
+                                    documents.add(document);
+                                }
+                            }
+                        }
+                    }
+                    List<String> mapStrings = new ArrayList<>();
+
+                    for (Document document : documents) {
+                        String mapString = MapStringParser.parse(document);
+                        mapStrings.add(mapString);
+                    }
+                    facade.passMapString(mapStrings);
+                    facade.mapLoaded();
+
+
 
                 } else if (selectedFile.canRead() && selectedFile.exists()) {
                     currentFileName = selectedFile.getName();
