@@ -223,36 +223,22 @@ public class Controller implements ActionListener, GUIInformation {
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 selectedFile = chooser.getSelectedFile();
-                if(selectedFile.exists() && selectedFile.isDirectory()){
-                    //TODO: Code to load map from directory and start game
+                if (selectedFile.exists() && selectedFile.isDirectory()) {
                     System.out.println("Directory selected");
-                    File [] files = selectedFile.listFiles();
-                    List<Document> documents = new ArrayList<>();
-                    if (files != null) {
-                        for (File file : files) {
-                            if (file.isFile() && file.getName().endsWith(".xml")) {
-                                Document document = builder.build(file);
-                                if (document != null) {
-                                    documents.add(document);
-                                }
-                            }
-                        }
-                    }
-                    List<String> mapStrings = new ArrayList<>();
+                    currentFileName = selectedFile.getName();
+                    fileDirectory = selectedFile.getParent();
+                    //Code to load file
+                    this.loadContext = new LoadContext();
+                    LoadStrategy folderLoadStrategy = new FolderLoadStrategy();
+                    this.loadContext.setStrategy(folderLoadStrategy);
 
-                    for (Document document : documents) {
-                        String mapString = MapStringParser.parse(document);
-                        mapStrings.add(mapString);
-                    }
-                    facade.passMapString(mapStrings);
-                    facade.mapLoaded();
-
-
+                    loadContext.load(selectedFile);
+                    //TODO: Game Check
 
                 } else if (selectedFile.canRead() && selectedFile.exists()) {
                     currentFileName = selectedFile.getName();
                     fileDirectory = selectedFile.getParent();
-                    //TODO: Code to load file
+                    //Code to load file
                     this.loadContext = new LoadContext();
                     LoadStrategy fileLoadStrategy = new FileLoadStrategy();
                     this.loadContext.setStrategy(fileLoadStrategy);
