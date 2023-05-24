@@ -329,34 +329,26 @@ public class Controller implements ActionListener, GUIInformation {
         return validPortalCount;
     }
 
-
-    private boolean checkGoldAndPillCount() {
-
+    private void checkGoldAndPillCount() {
         int goldCount = 0;
         int pillCount = 0;
         for (int row = 0; row < model.getHeight(); row++) {
             for (int col = 0; col < model.getWidth(); col++) {
                 char tileChar = model.getTile(col, row);
-                if (tileChar == 'd') { // GoldTile
+                if (tileChar == 'd') {
                     goldCount++;
-                } else if (tileChar == 'c') { // PillTile
+                } else if (tileChar == 'c') {
                     pillCount++;
                 }
             }
         }
 
-        boolean validCount = goldCount >= 2 && pillCount >= 2;
-
-        if (!validCount) {
-            String message = String.format("[Level %s – less than 2 Gold and Pill: Gold = %d, Pill = %d]",
+        if (goldCount < 2 || pillCount < 2) {
+            String message = String.format("[Level %s - Insufficient number of Gold or Pill: Gold = %d, Pill = %d]",
                     currentFileName, goldCount, pillCount);
-            System.out.println(message);
             writeToLogFile(message);
         }
-
-        return validCount;
     }
-
 
     private boolean checkGoldAndPillAccessibility() {
         // 获取金币和药丸的位置
@@ -439,18 +431,52 @@ public class Controller implements ActionListener, GUIInformation {
     }
 
     private boolean isAccessibleTile(int col, int row, boolean[] visited, Queue<Integer> queue) {
-        if (!visited[row * model.getWidth() + col]) {
+        int position = row * model.getWidth() + col;
+        if (!visited[position]) {
             char tileChar = model.getTile(col, row);
-            if (tileChar == 'a' || tileChar == 'c' || tileChar == 'd' || tileChar == 'e' || tileChar == 'f') {
-                visited[row * model.getWidth() + col] = true;
-                queue.offer(row * model.getWidth() + col);
-            }
-            if (tileChar == 'f') {
-                return true; // 找到可访问的位置
+            if (tileChar == 'a' || tileChar == 'c' || tileChar == 'd' || tileChar == 'e' || tileChar == 'f' || isPortal(tileChar)) {
+                visited[position] = true;
+                queue.offer(position);
+
+                if (isPortal(tileChar)) {
+                    // 获取对应传送门的位置
+                    int pairPosition = getPortalPairPosition(tileChar);
+                    if (pairPosition != -1 && !visited[pairPosition]) {
+                        System.out.println(queue);
+                        queue.offer(pairPosition);
+                        System.out.println(queue);
+                        //visited[pairPosition] = true;
+                    }
+                }
+
+                if (tileChar == 'f') {
+                    return true; // 找到可访问的位置
+                }
             }
         }
         return false;
     }
+
+    private boolean isPortal(char tileChar) {
+        return tileChar == 'i' || tileChar == 'j' || tileChar == 'k' || tileChar == 'l';
+    }
+
+    private int getPortalPairPosition(char portalChar) {
+        boolean firstPortalFound = false;
+        for (int row = 0; row < model.getHeight(); row++) {
+            for (int col = 0; col < model.getWidth(); col++) {
+                char tileChar = model.getTile(col, row);
+                if (tileChar == portalChar) {
+                    if (firstPortalFound) {
+                        return row * model.getWidth() + col;
+                    }
+                    firstPortalFound = true;
+                }
+            }
+        }
+        return -1; // 返回 -1 表示未找到对应的传送门
+    }
+
 
 
     private void writeToLogFile(String message) {
