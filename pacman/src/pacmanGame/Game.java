@@ -41,7 +41,6 @@ public class Game extends GameGrid
   protected NewGameGrid newGrid;
 
   public Game(GameCallback gameCallback, Properties properties,String mapString) {
-
     //Setup game
     super(nbHorzCells, nbVertCells, 20, false);
     this.gameCallback = gameCallback;
@@ -88,8 +87,9 @@ public class Game extends GameGrid
     // This makes it improbable that we miss a hit
     boolean hasPacmanBeenHit;
     boolean hasPacmanEatAllPills;
-    setupPillAndItemsLocations();
-    int maxPillsAndItems = countPillsAndItems();
+    setupItemsLocationsFromMap();
+    int maxPillsAndItems = countItemsFromMap();
+    System.out.println(maxPillsAndItems);
 
     do {
       hasPacmanBeenHit = troll.getLocation().equals(pacActor.getLocation()) ||
@@ -545,6 +545,45 @@ public class Game extends GameGrid
 
       }
     }
+  }
+
+  private void setupItemsLocationsFromMap() {
+    for (int y = 0; y < nbVertCells; y++)
+    {
+      for (int x = 0; x < nbHorzCells; x++)
+      {
+        Location location = new Location(x, y);
+        char a = newGrid.getCellChar(location);
+
+        if (a == 'c' ) { // pill
+          pillAndItemLocations.add(location);
+        } else if (a == 'd') {//gold
+          pillAndItemLocations.add(location);
+        }
+        else if (a == 'e') {//ice
+          pillAndItemLocations.add(location);
+        }
+      }
+    }
+  }
+
+  private int countItemsFromMap() {
+    int pillsAndItemsCount = 0;
+    for (int y = 0; y < nbVertCells; y++)
+    {
+      for (int x = 0; x < nbHorzCells; x++)
+      {
+        Location location = new Location(x, y);
+        char a = newGrid.getCellChar(location);
+
+        if (a == 'c' ) { // pill
+          pillsAndItemsCount++;
+        } else if (a == 'd') {//gold
+          pillsAndItemsCount++;
+        }
+      }
+    }
+    return pillsAndItemsCount;
   }
 
 
