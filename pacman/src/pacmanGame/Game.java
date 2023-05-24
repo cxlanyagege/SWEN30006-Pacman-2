@@ -53,7 +53,7 @@ public class Game extends GameGrid {
 
         //Setup for auto test
         pacActor.setPropertyMoves(properties.getProperty("PacMan.move"));
-        //pacActor.setAuto(Boolean.parseBoolean(properties.getProperty("PacMan.isAuto")));
+        pacActor.setAuto(Boolean.parseBoolean(properties.getProperty("PacMan.isAuto")));
 
         //loadMap();
         GGBackground bg = getBg();
@@ -106,6 +106,8 @@ public class Game extends GameGrid {
                 }
               }
             }
+
+            hasPacmanBeenHit = false;
 
             hasPacmanEatAllPills = pacActor.getNbPills() >= maxPillsAndItems;
 
@@ -381,19 +383,19 @@ public class Game extends GameGrid {
 
 
         if (color.equals(Color.white)) {
-            Portal portal = new Portal(color, location, "data/i_portalWhiteTile.png");
+            Portal portal = new Portal(color, location, "sprites/portal_white.png");
             addPortal(portal);
             addActor(portal, location);
         } else if (color.equals(Color.yellow)) {
-            Portal portal = new Portal(color, location, "data/j_portalYellowTile.png");
+            Portal portal = new Portal(color, location, "sprites/portal_yellow.png");
             addPortal(portal);
             addActor(portal, location);
         } else if (color.equals(Color.orange)) {
-            Portal portal = new Portal(color, location, "data/k_portalDarkGoldTile.png");
+            Portal portal = new Portal(color, location, "sprites/portal_dark_gold.png");
             addPortal(portal);
             addActor(portal, location);
         } else if (color.equals(Color.darkGray)) {
-            Portal portal = new Portal(color, location, "data/l_portalDarkGrayTile.png");
+            Portal portal = new Portal(color, location, "sprites/portal_dark_gray.png");
             addPortal(portal);
             addActor(portal, location);
         }
