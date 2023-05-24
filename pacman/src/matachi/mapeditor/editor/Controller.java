@@ -58,7 +58,7 @@ public class Controller implements ActionListener, GUIInformation {
     private String currentFileName;
     private String fileDirectory;
 
-    private Facade facade = Facade.getInstance();
+    private final Facade facade = Facade.getInstance();
     private LoadContext loadContext;
     private static Controller instance;
 
@@ -218,6 +218,9 @@ public class Controller implements ActionListener, GUIInformation {
         SAXBuilder builder = new SAXBuilder();
         try {
             JFileChooser chooser = new JFileChooser();
+            // enable chooser select both files and directories
+            chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+
             File selectedFile;
             BufferedReader in;
             FileReader reader = null;
@@ -228,7 +231,11 @@ public class Controller implements ActionListener, GUIInformation {
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 selectedFile = chooser.getSelectedFile();
-                if (selectedFile.canRead() && selectedFile.exists()) {
+                if(selectedFile.isDirectory()){
+                    //TODO: Code to load map from directory and start game
+                    System.out.println("Directory selected");
+
+                } else if (selectedFile.canRead() && selectedFile.exists()) {
                     currentFileName = selectedFile.getName();
                     fileDirectory = selectedFile.getParent();
                     //TODO: Code to load file
@@ -237,12 +244,6 @@ public class Controller implements ActionListener, GUIInformation {
                     this.loadContext.setStrategy(fileLoadStrategy);
 
                     loadContext.load(selectedFile);
-
-//                    String mapString = model.getMapAsString();
-//                    facade.passMapString(mapString);
-//                    facade.mapLoaded();
-//                    grid.redrawGrid();
-
                     levelCheck();
                 }
             }

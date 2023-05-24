@@ -20,7 +20,7 @@ public class Facade {
 
 
 
-     private GameConfig gameConfig= Driver.gameConfig;
+     private final GameConfig gameConfig= Driver.gameConfig;
      //Properties properties = PropertiesLoader.loadPropertiesFile(propertiesPath);
 
 

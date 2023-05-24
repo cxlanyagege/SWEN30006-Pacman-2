@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileLoadStrategy implements LoadStrategy {
-    private Facade facade = Facade.getInstance();
+    private final Facade facade = Facade.getInstance();
 
 
     @Override
