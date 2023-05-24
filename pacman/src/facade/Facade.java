@@ -10,7 +10,7 @@ import src.pacmanGame.GameConfig;
 
 public class Facade {
 
-
+    private static Facade instance;
     private String mapString;
 
      private Controller controller;
@@ -25,14 +25,21 @@ public class Facade {
 
 
 
-    public Facade(){
+    private Facade(){
 
+    }
+
+    public static synchronized Facade getInstance() {
+        if (instance == null) {
+            instance = new Facade();
+        }
+        return instance;
     }
 
 
 
     public void startEditor(){
-        controller = new Controller();
+        controller = Controller.getInstance();
     }
 
 

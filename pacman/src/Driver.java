@@ -45,7 +45,7 @@ public class Driver {
 
         gameConfig = new GameConfig(gameCallback,properties);
 
-        Facade facade = new Facade();
+        Facade facade = Facade.getInstance();
         facade.startEditor();
 
 
