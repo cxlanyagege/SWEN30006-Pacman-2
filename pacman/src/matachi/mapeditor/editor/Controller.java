@@ -408,7 +408,6 @@ public class Controller implements ActionListener, GUIInformation {
             writeToLogFile(message);
         }
     }
-
     private boolean checkGoldAndPillAccessibility() {
         // 获取金币和药丸的位置
         Set<Integer> goldPositions = new HashSet<>();
@@ -427,29 +426,57 @@ public class Controller implements ActionListener, GUIInformation {
             }
         }
 
+        List<Integer> inaccessibleGoldPositions = new ArrayList<>();
+        List<Integer> inaccessiblePillPositions = new ArrayList<>();
+
         // 检查金币的可访问性
         for (int position : goldPositions) {
             if (!isAccessible(position)) {
-                String message = String.format("[Level %s - Gold at position (%d, %d) is not accessible]",
-                        currentFileName, position % model.getWidth(), position / model.getWidth());
-                System.out.println(message);
-                writeToLogFile(message);
-                return false;
+                inaccessibleGoldPositions.add(position);
             }
         }
 
         // 检查药丸的可访问性
         for (int position : pillPositions) {
             if (!isAccessible(position)) {
-                String message = String.format("[Level %s - Pill at position (%d, %d) is not accessible]",
-                        currentFileName, position % model.getWidth(), position / model.getWidth());
-                System.out.println(message);
-                writeToLogFile(message);
-                return false;
+                inaccessiblePillPositions.add(position);
             }
         }
 
-        return true;
+        // 如果存在不可访问的金币位置
+        if(inaccessibleGoldPositions.isEmpty() && inaccessiblePillPositions.isEmpty()) {
+            return true;
+        }
+
+        if (!inaccessibleGoldPositions.isEmpty()) {
+            StringBuilder positionsString = new StringBuilder();
+            for (int position : inaccessibleGoldPositions) {
+                int row = position / model.getWidth();
+                int col = position % model.getWidth();
+                positionsString.append("(").append(col).append(", ").append(row).append("); ");
+            }
+
+            String message = String.format("[Level %s - Gold not accessible: %s]",
+                    currentFileName, positionsString.toString());
+            System.out.println(message);
+            writeToLogFile(message);
+        }
+
+        if (!inaccessiblePillPositions.isEmpty()) {// 如果存在不可访问的药丸位置
+            StringBuilder positionsString = new StringBuilder();
+            for (int position : inaccessiblePillPositions) {
+                int row = position / model.getWidth();
+                int col = position % model.getWidth();
+                positionsString.append("(").append(col).append(", ").append(row).append("); ");
+            }
+
+            String message = String.format("[Level %s - Pill not accessible: %s]",
+                    currentFileName, positionsString.toString());
+            System.out.println(message);
+            writeToLogFile(message);
+        }
+
+        return false;
     }
 
     private boolean isAccessible(int startPosition) {
