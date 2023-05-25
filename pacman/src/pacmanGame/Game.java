@@ -409,11 +409,11 @@ public class Game extends GameGrid {
                     }
 
                 } else if (a == 'g') {//troll
-                    Monster troll = new Monster(this, MonsterType.Troll);
+                    Monster troll = new Troll(this);
                     addActor(troll, location);
                     trolls.add(troll);
                 } else if (a == 'h') {//tx5
-                    Monster tx5 = new Monster(this, MonsterType.TX5);
+                    Monster tx5 = new Tx5(this);
                     addActor(tx5, location);
                     tx5s.add(tx5);
                 } else if (a == 'i') {//portal white
