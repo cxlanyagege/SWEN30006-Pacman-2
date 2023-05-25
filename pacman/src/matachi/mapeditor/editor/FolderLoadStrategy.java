@@ -12,7 +12,6 @@ import java.util.List;
 public class FolderLoadStrategy implements LoadStrategy {
     private final Facade facade = Facade.getInstance();
 
-
     @Override
     public void load(File selectedFile) {
         SAXBuilder builder = new SAXBuilder();
@@ -20,6 +19,7 @@ public class FolderLoadStrategy implements LoadStrategy {
         try {
 
             File[] files = selectedFile.listFiles();
+
             List<Document> documents = new ArrayList<>();
             if (files != null) {
                 for (File file : files) {
@@ -31,14 +31,35 @@ public class FolderLoadStrategy implements LoadStrategy {
                     }
                 }
             }
+
             List<String> mapStrings = new ArrayList<>();
+
+            int numOffFiles = documents.size();
+            int numPassCheck = 0;
+
 
             for (Document document : documents) {
                 String mapString = MapStringParser.parse(document);
-                mapStrings.add(mapString);
+                Checker checker = new Checker();
+                if (checker.levelCheck()) {
+                    mapStrings.add(mapString);
+                    numPassCheck++;
+                } else {
+                    System.out.println("File did not pass check");
+                    Controller.getInstance().grid.redrawGrid();
+                    return;
+                }
             }
-            facade.passMapString(mapStrings);
-            facade.mapLoaded();
+
+            if (numOffFiles == numPassCheck) {
+                System.out.println("All files pass check");
+                Checker checker = new Checker();
+                if(checker.gameCheck(selectedFile)){
+                    facade.passMapString(mapStrings);
+                    facade.mapLoaded();
+                }
+
+            }
 
 
         } catch (Exception e) {
