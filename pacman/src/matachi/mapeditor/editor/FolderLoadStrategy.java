@@ -57,7 +57,7 @@ public class FolderLoadStrategy implements LoadStrategy {
                 Checker checker = new Checker();
                 if(checker.gameCheck(selectedFile)){
                     facade.passMapString(mapStrings);
-                    facade.mapLoaded();
+                    new Thread(facade::startGame).start();
                 }
 
             }

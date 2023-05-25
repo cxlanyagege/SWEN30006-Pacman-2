@@ -13,19 +13,17 @@ public class Facade {
     private static Facade instance;
     private List<String> mapStrings;
 
-     private Controller controller;
-     private Game game;
+    private Controller controller;
+    private Game game;
 
-     private boolean mapLoaded = false;
-
-
-
-     private final GameConfig gameConfig= Driver.gameConfig;
-     //Properties properties = PropertiesLoader.loadPropertiesFile(propertiesPath);
+    private boolean mapLoaded = false;
 
 
+    private final GameConfig gameConfig = Driver.gameConfig;
+    //Properties properties = PropertiesLoader.loadPropertiesFile(propertiesPath);
 
-    private Facade(){
+
+    private Facade() {
 
     }
 
@@ -37,45 +35,30 @@ public class Facade {
     }
 
 
-
-    public void startEditor(){
+    public void startEditor() {
         controller = Controller.getInstance();
     }
 
 
+    public synchronized void startGame() {
 
-    public synchronized void startGame(){
+        if (mapLoaded) {
 
-        //game = new Game(gameConfig.getGameCallback(),gameConfig.getProperties(),mapString);
-
-        if(!mapLoaded){
-
-            // Start editor with blank map
-        }else if(mapStrings.size() == 1){
-            game = new Game(gameConfig.getGameCallback(),gameConfig.getProperties(),mapStrings);
-            System.out.println(mapStrings.get(0));
-
-        }else{
-            //implement multiple maps game
-            System.out.println(mapStrings);
-            game = new Game(gameConfig.getGameCallback(),gameConfig.getProperties(),mapStrings);
+            this.game = new Game(gameConfig.getGameCallback(), gameConfig.getProperties(), mapStrings);
+            //System.out.println(mapStrings.get(0));
+        } else {
+            System.out.println("Map not loaded");
         }
 
     }
 
-    public synchronized void passMapString(List<String> mapStrings){
+    public synchronized void passMapString(List<String> mapStrings) {
         this.mapStrings = mapStrings;
     }
 
-    public synchronized void mapLoaded(){
-        mapLoaded = true;
+    public synchronized void mapLoaded() {
+        this.mapLoaded = true;
     }
-
-
-
-
-
-
 
 
 }

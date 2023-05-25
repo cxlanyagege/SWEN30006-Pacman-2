@@ -138,7 +138,6 @@ public class Game extends GameGrid {
                 refresh();
 
 
-
                 if (currentMapIndex < mapStrings.size() - 1) {
                     currentMapIndex++;
                     currentGrid = grids.get(currentMapIndex);
@@ -171,7 +170,7 @@ public class Game extends GameGrid {
 //                }
 //            }
 
-            if(portals.size() !=0){
+            if (portals.size() != 0) {
                 try {
                     checkAndHandlePortalCollision(pacActor);
                     for (Monster troll : trolls) {
@@ -193,8 +192,6 @@ public class Game extends GameGrid {
 
         } while (!hasPacmanBeenHit && !hasCompletedAllMaps);
         delay(120);
-
-
 
 
         Location loc = pacActor.getLocation();
@@ -220,125 +217,6 @@ public class Game extends GameGrid {
 
         doPause();
 
-
-    }
-
-    public Game(GameCallback gameCallback, Properties properties, String mapString) {
-        //Setup game
-        super(nbHorzCells, nbVertCells, 20, false);
-        this.gameCallback = gameCallback;
-        this.properties = properties;
-        currentMapIndex = 0;
-
-        currentGrid = new NewGameGrid(mapString);
-        grids.add(currentGrid);
-
-        // TODO: remove sout
-        System.out.println("num of grids: " + grids.size());
-
-        setSimulationPeriod(100);
-        setTitle("[PacMan in the TorusVerse]");
-
-        //Setup for auto test
-        pacActor.setAuto(Boolean.parseBoolean(properties.getProperty("PacMan.isAuto")));
-
-        //loadMap();
-        GGBackground bg = getBg();
-        drawGridFromMap(bg);
-
-        // pacman keyPad listener
-        addKeyRepeatListener(pacActor);
-        setKeyRepeatPeriod(150);
-
-        //Setup Random seeds and slow down
-        seed = Integer.parseInt(properties.getProperty("seed"));
-        pacActor.setSlowDown(3);
-        for (Monster troll : trolls) {
-          troll.setSeed(seed);
-          troll.setSlowDown(3);
-        }
-        for (Monster tx5 : tx5s) {
-          tx5.setSeed(seed);
-          tx5.setSlowDown(3);
-          tx5.stopMoving(5);
-        }
-
-        //Run the game
-        doRun();
-        show();
-
-        // Loop to look for collision in the application thread
-        // This makes it improbable that we miss a hit
-        boolean hasPacmanBeenHit = false;
-        boolean hasPacmanEatAllPills;
-        setupItemsLocationsFromMap();
-        int maxPillsAndItems = countItemsFromMap();
-        System.out.println(maxPillsAndItems);
-
-        do {
-
-            for (Monster troll : trolls) {
-              if (troll.getLocation().equals(pacActor.getLocation())) {
-                hasPacmanBeenHit = true;
-                break;
-              }
-            }
-
-            if (!hasPacmanBeenHit) {
-              for (Monster tx5 : tx5s) {
-                if (tx5.getLocation().equals(pacActor.getLocation())) {
-                  hasPacmanBeenHit = true;
-                  break;
-                }
-              }
-            }
-
-            hasPacmanBeenHit = false;
-
-            hasPacmanEatAllPills = pacActor.getNbPills() >= maxPillsAndItems;
-
-            try {
-                checkAndHandlePortalCollision(pacActor);
-                for (Monster troll : trolls) {
-                  checkAndHandlePortalCollision(troll);
-                }
-                for (Monster tx5 : tx5s) {
-                  checkAndHandlePortalCollision(tx5);
-                }
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-
-                e.printStackTrace();
-            }
-
-
-            delay(10);
-        } while (!hasPacmanBeenHit && !hasPacmanEatAllPills);
-        delay(120);
-
-
-        Location loc = pacActor.getLocation();
-        for (Monster troll : trolls) {
-          troll.setStopMoving(true);
-        }
-        for (Monster tx5 : tx5s) {
-          tx5.setStopMoving(true);
-        }
-        pacActor.removeSelf();
-
-        String title = "";
-        if (hasPacmanBeenHit) {
-            bg.setPaintColor(Color.red);
-            title = "GAME OVER";
-            addActor(new Actor("sprites/explosion3.gif"), loc);
-        } else if (hasPacmanEatAllPills) {
-            bg.setPaintColor(Color.yellow);
-            title = "YOU WIN";
-        }
-        setTitle(title);
-        gameCallback.endOfGame(title);
-
-        doPause();
 
     }
 
@@ -634,10 +512,10 @@ public class Game extends GameGrid {
                 } else if (a == 'e') {//ice
                     putIce(bg, location);
                 } else if (a == 'f') {//pacman
-                    if(!pacActorAdded){
+                    if (!pacActorAdded) {
                         addActor(pacActor, location);
                         pacActorAdded = true;
-                    }else {
+                    } else {
                         pacActor.setLocation(location);
                     }
 
@@ -661,7 +539,6 @@ public class Game extends GameGrid {
             }
         }
     }
-
 
 
     private void setupItemsLocationsFromMap() {
