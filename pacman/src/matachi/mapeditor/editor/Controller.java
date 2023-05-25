@@ -267,7 +267,8 @@ public class Controller implements ActionListener, GUIInformation {
     }
 
     // Game Checking
-    private void gameCheck(File gameFolder) {
+    private boolean gameCheck(File gameFolder) {
+        boolean flag = true;
         File[] mapFiles = gameFolder.listFiles((dir, name) -> name.endsWith(".xml"));
 
         // 检查是否至少有一个正确命名的地图文件
@@ -275,14 +276,19 @@ public class Controller implements ActionListener, GUIInformation {
             String message = String.format("[Game %s – no maps found]", gameFolder.getName());
             System.out.println(message);
             writeToLogFile(message);
-            return;
+            flag = false;
         }
 
         // 检查地图文件序列是否良好定义
-        checkMapFileSequence(mapFiles);
+        if (!checkMapFileSequence(mapFiles)){
+            flag = false;
+        }
+
+        return flag;
     }
 
-    private void checkMapFileSequence(File[] mapFiles) {
+    private boolean checkMapFileSequence(File[] mapFiles) {
+        boolean flag = true;
         Map<String, List<String>> mapLevelFiles = new HashMap<>();
 
         // 将地图文件按等级分组
@@ -305,8 +311,10 @@ public class Controller implements ActionListener, GUIInformation {
                         currentFileName, String.join("; ", levelFiles));
                 System.out.println(message);
                 writeToLogFile(message);
+                flag = false;
             }
         }
+        return flag;
     }
 
     private String getLevelFromFileName(String fileName) {
