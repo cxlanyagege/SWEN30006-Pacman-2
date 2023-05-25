@@ -36,25 +36,40 @@ public class Checker {
 
 
     // Game Checking
-    public boolean gameCheck(File gameFolder) {
-        boolean flag = true;
+    public File[] gameCheck(File gameFolder) {
         File[] mapFiles = gameFolder.listFiles((dir, name) -> name.endsWith(".xml"));
+        File[] validMapFiles = null;
 
-        // 检查是否至少有一个正确命名的地图文件
+        // 检查是否有XML文件
         if (mapFiles == null || mapFiles.length == 0) {
             String message = String.format("[Game %s – no maps found]", gameFolder.getName());
             System.out.println(message);
-            writeToLogFile(message,currentFileName);
-            flag = false;
-        }
+            writeToLogFile(message, currentFileName);
+        } else {
+            List<File> validMapFilesList = new ArrayList<>();
 
-        // 检查地图文件序列是否良好定义
-        if (!checkMapFileSequence(mapFiles)){
-            flag = false;
-        }
+            // 检查地图文件名是否以数字开头
+            for (File file : mapFiles) {
+                String fileName = file.getName();
+                if (Character.isDigit(fileName.charAt(0))) {
+                    validMapFilesList.add(file);
+                }
+            }
 
-        return flag;
+            // 检查地图文件序列是否良好定义
+            if (validMapFilesList.size() > 0) {
+                validMapFiles = validMapFilesList.toArray(new File[0]);
+                if (!checkMapFileSequence(validMapFiles)) {
+                    validMapFiles = null;
+                }
+            }
+        }
+        
+        System.out.println(validMapFiles);
+        return validMapFiles;
     }
+
+
 
     // game checker helper methods
     private boolean checkMapFileSequence(File[] mapFiles) {
