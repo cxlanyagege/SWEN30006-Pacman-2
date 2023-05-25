@@ -19,11 +19,14 @@ public class FolderLoadStrategy implements LoadStrategy {
 
         try {
 
-            File[] files = selectedFile.listFiles();
+           // File[] files = selectedFile.listFiles();
+            Checker checker = new Checker();
+            File[] validMapFiles;
+            validMapFiles=checker.gameCheck(selectedFile);
 
             List<Document> documents = new ArrayList<>();
-            if (files != null) {
-                for (File file : files) {
+            if (validMapFiles != null) {
+                for (File file : validMapFiles) {
                     if (file.isFile() && file.getName().endsWith(".xml")) {
                         Document document = builder.build(file);
                         if (document != null) {
@@ -41,7 +44,7 @@ public class FolderLoadStrategy implements LoadStrategy {
 
             for (Document document : documents) {
                 String mapString = MapStringParser.parse(document);
-                Checker checker = new Checker();
+                checker = new Checker();
                 if (checker.levelCheck()) {
                     mapStrings.add(mapString);
                     numPassCheck++;
@@ -52,10 +55,10 @@ public class FolderLoadStrategy implements LoadStrategy {
                 }
             }
 
-            if (numOffFiles == numPassCheck) {
-                System.out.println("All files pass check");
-                Checker checker = new Checker();
-                if (checker.gameCheck(selectedFile)!=null) {
+            if (numOffFiles != 0 && numOffFiles == numPassCheck) {
+                System.out.println("All files passed check");
+
+                if (mapStrings.size()>0) {
                     facade.passMapString(mapStrings);
                     facade.mapLoaded();
                     new Thread(facade::startGame).start();
