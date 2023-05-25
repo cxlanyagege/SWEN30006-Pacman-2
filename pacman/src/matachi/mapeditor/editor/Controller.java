@@ -232,7 +232,7 @@ public class Controller implements ActionListener, GUIInformation {
                     LoadStrategy folderLoadStrategy = new FolderLoadStrategy();
                     this.loadContext.setStrategy(folderLoadStrategy);
 
-                    //TODO add bool for game check
+                    // TODO: Level check Folder, if level check false, update map in editor
 
                     if(gameCheck(selectedFile)){
                         loadContext.load(selectedFile);
@@ -338,14 +338,19 @@ public class Controller implements ActionListener, GUIInformation {
     /**
      * check the validity of a level
      */
-    private void levelCheck() {
-        checkPacManStart();
-        checkPortalCount();
-        checkGoldAndPillCount();
-        checkGoldAndPillAccessibility();
+    private boolean levelCheck() {
+        boolean isPacManStartValid = checkPacManStart();
+        boolean isPortalCountValid = checkPortalCount();
+        boolean isGoldAndPillCountValid = checkGoldAndPillCount();
+        boolean isGoldAndPillAccessible = checkGoldAndPillAccessibility();
+
+        return isPacManStartValid && isPortalCountValid && isGoldAndPillCountValid && isGoldAndPillAccessible;
     }
 
-    private void checkPacManStart() {
+
+    private boolean checkPacManStart() {
+        boolean flag = true;
+
         int pacManStartCount = 0;
         List<String> pacManStartCoordinates = new ArrayList<>();
 
@@ -362,7 +367,10 @@ public class Controller implements ActionListener, GUIInformation {
         if (pacManStartCount != 1) {
             String message = String.format("[Level %s – no start or more than one start for PacMan: %s]", currentFileName, String.join("; ", pacManStartCoordinates));
             writeToLogFile(message);
+            flag = false;
         }
+
+        return flag;
     }
 
     private boolean checkPortalCount() {
@@ -386,8 +394,11 @@ public class Controller implements ActionListener, GUIInformation {
             }
         }
 
-        boolean validPortalCount = portalWhiteCoordinates.size() == 2 && portalYellowCoordinates.size() == 2 &&
-                portalDarkGoldCoordinates.size() == 2 && portalDarkGrayCoordinates.size() == 2;
+        boolean validPortalCount = (portalWhiteCoordinates.size() == 0 || portalWhiteCoordinates.size() == 2)
+                && (portalYellowCoordinates.size() == 0 || portalYellowCoordinates.size() == 2)
+                && (portalDarkGoldCoordinates.size() == 0 || portalDarkGoldCoordinates.size() == 2)
+                && (portalDarkGrayCoordinates.size() == 0 || portalDarkGrayCoordinates.size() == 2);
+
 
         if (!validPortalCount) {
             String message = String.format("[Level %s - portal count is not as expected: Portal White = %d %s, Portal Yellow = %d %s, Portal Dark Gold = %d %s, Portal Dark Gray = %d %s]",
@@ -402,7 +413,9 @@ public class Controller implements ActionListener, GUIInformation {
         return validPortalCount;
     }
 
-    private void checkGoldAndPillCount() {
+    private boolean checkGoldAndPillCount() {
+        boolean flag = true;
+
         int goldCount = 0;
         int pillCount = 0;
         for (int row = 0; row < model.getHeight(); row++) {
@@ -420,7 +433,10 @@ public class Controller implements ActionListener, GUIInformation {
             String message = String.format("[Level %s - Insufficient number of Gold or Pill: Gold = %d, Pill = %d]",
                     currentFileName, goldCount, pillCount);
             writeToLogFile(message);
+            flag = false;
         }
+
+        return flag;
     }
     private boolean checkGoldAndPillAccessibility() {
         // 获取金币和药丸的位置
