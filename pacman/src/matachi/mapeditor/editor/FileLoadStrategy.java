@@ -22,10 +22,16 @@ public class FileLoadStrategy implements LoadStrategy {
             String mapString = MapStringParser.parse(document);
             List<String> mapStrings = new ArrayList<>();
             mapStrings.add(mapString);
-            facade.passMapString(mapStrings);
-            facade.mapLoaded();
+
+            Checker checker = new Checker();
+            boolean checkResult =  checker.levelCheck();
             Controller.getInstance().grid.redrawGrid();
 
+            if(checkResult){
+                facade.passMapString(mapStrings);
+                facade.mapLoaded();
+
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
