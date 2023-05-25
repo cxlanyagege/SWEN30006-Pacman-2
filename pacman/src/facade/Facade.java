@@ -52,7 +52,7 @@ public class Facade {
 
             // Start editor with blank map
         }else if(mapStrings.size() == 1){
-            game = new Game(gameConfig.getGameCallback(),gameConfig.getProperties(),mapStrings.get(0));
+            game = new Game(gameConfig.getGameCallback(),gameConfig.getProperties(),mapStrings);
             System.out.println(mapStrings.get(0));
 
         }else{

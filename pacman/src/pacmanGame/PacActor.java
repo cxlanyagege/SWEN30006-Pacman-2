@@ -28,6 +28,10 @@ public class PacActor extends Actor implements GGKeyRepeatListener
     pillAndItemLocations = game.getPillAndItemLocations();
   }
 
+  public void setNbPills(int nbPills) {
+    this.nbPills = nbPills;
+  }
+
   public void keyRepeated(int keyCode)
   {
     if (isAuto) {

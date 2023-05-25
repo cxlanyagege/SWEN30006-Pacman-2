@@ -232,8 +232,14 @@ public class Controller implements ActionListener, GUIInformation {
                     LoadStrategy folderLoadStrategy = new FolderLoadStrategy();
                     this.loadContext.setStrategy(folderLoadStrategy);
 
-                    loadContext.load(selectedFile);
-                    gameCheck(selectedFile);
+                    //TODO add bool for game check
+
+                    if(gameCheck(selectedFile)){
+                        loadContext.load(selectedFile);
+                    }
+
+
+
 
                 } else if (selectedFile.canRead() && selectedFile.exists()) {
                     currentFileName = selectedFile.getName();

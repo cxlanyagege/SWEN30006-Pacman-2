@@ -7,7 +7,6 @@ import ch.aplu.jgamegrid.*;
 import src.utility.GameCallback;
 
 import java.awt.*;
-import java.beans.IntrospectionException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,9 +42,6 @@ public class Game extends GameGrid {
     protected List<NewGameGrid> grids = new ArrayList<>();
     protected NewGameGrid currentGrid;
     private boolean pacActorAdded = false;
-
-
-
 
 
     public Game(GameCallback gameCallback, Properties properties, List<String> mapStrings) {
@@ -133,6 +129,12 @@ public class Game extends GameGrid {
                     }
                 }
 
+//                for (Actor actor : getActors()) {
+//
+//                        actor.removeSelf();
+//
+//                }
+
                 trolls.clear();
                 tx5s.clear();
                 portals.clear();
@@ -152,8 +154,7 @@ public class Game extends GameGrid {
 
 
                     drawGridFromMap(bg);
-                    //TODO: Conflict
-                    //pacActor.setNbPills(0);
+                    pacActor.setNbPills(0);
                     setupItemsLocationsFromMap();
                     maxPillsAndItems = countItemsFromMap();
 
@@ -653,9 +654,6 @@ public class Game extends GameGrid {
                     }else {
                         pacActor.setLocation(location);
                     }
-
-
-
 
                 } else if (a == 'g') {//troll
                     Monster troll = new Monster(this, MonsterType.Troll);
