@@ -16,16 +16,16 @@ public class PacMan extends PacActor implements GGKeyRepeatListener
   //rivate Game game;
   private List<Location> pillAndItemLocations;
   private SearchStrategy searchPillAndItem = new SearchPillAndItem();
-  public PacMan(Game game)
+  public PacMan(TorusVerseGame torusVerseGame)
   {
     super(true, "sprites/pacpix.gif", nbSprites);  // Rotatable
-    this.game = game;
+    this.torusVerseGame = torusVerseGame;
   }
   private boolean isAuto = false;
 
   public void setAuto(boolean auto) {
     isAuto = auto;
-    pillAndItemLocations = game.getPillAndItemLocations();
+    pillAndItemLocations = torusVerseGame.getPillAndItemLocations();
   }
 
   public void setNbPills(int nbPills) {
@@ -76,12 +76,12 @@ public class PacMan extends PacActor implements GGKeyRepeatListener
     if (isAuto) {
       moveInAutoMode();
     }
-    this.game.getGameCallback().pacManLocationChanged(getLocation(), score, nbPills);
+    this.torusVerseGame.getGameCallback().pacManLocationChanged(getLocation(), score, nbPills);
   }
 
   // Check if pill is still valid in that position
   boolean isPillLocation(Location location) {
-    List<Location> pillLocations = game.getPillAndItemLocations();
+    List<Location> pillLocations = torusVerseGame.getPillAndItemLocations();
     for (Location pillLocation : pillLocations) {
       if (pillLocation.equals(location)) {
         return true;
@@ -92,7 +92,7 @@ public class PacMan extends PacActor implements GGKeyRepeatListener
 
   // Auto move main handle
   private void moveInAutoMode() {
-    Location[] closestPillAndFirstStep = searchPillAndItem.search(game, this);
+    Location[] closestPillAndFirstStep = searchPillAndItem.search(torusVerseGame, this);
     if (closestPillAndFirstStep != null) {
       Location firstStep = closestPillAndFirstStep[1];
       setDirection(getLocation().getCompassDirectionTo(firstStep));
@@ -114,19 +114,19 @@ public class PacMan extends PacActor implements GGKeyRepeatListener
       nbPills++;
       score++;
       getBackground().fillCell(location, Color.lightGray);
-      game.getGameCallback().pacManEatPillsAndItems(location, "pills");
+      torusVerseGame.getGameCallback().pacManEatPillsAndItems(location, "pills");
       if (isAuto) pillAndItemLocations.remove(location);
     } else if (c.equals(Color.yellow)) {
       nbPills++;
       score+= 5;
       getBackground().fillCell(location, Color.lightGray);
-      game.getGameCallback().pacManEatPillsAndItems(location, "gold");
-      game.removeItem("gold",location);
+      torusVerseGame.getGameCallback().pacManEatPillsAndItems(location, "gold");
+      torusVerseGame.removeItem("gold",location);
       if (isAuto) pillAndItemLocations.remove(location);
     } else if (c.equals(Color.blue)) {
       getBackground().fillCell(location, Color.lightGray);
-      game.getGameCallback().pacManEatPillsAndItems(location, "ice");
-      game.removeItem("ice",location);
+      torusVerseGame.getGameCallback().pacManEatPillsAndItems(location, "ice");
+      torusVerseGame.removeItem("ice",location);
       if (isAuto) pillAndItemLocations.remove(location);
     }
     String title = "[PacMan in the Multiverse] Current score: " + score;

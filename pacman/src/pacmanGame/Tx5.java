@@ -3,15 +3,15 @@ package src.pacmanGame;
 import ch.aplu.jgamegrid.Location;
 
 public class Tx5 extends Monster {
-    private final Game game;
-    public Tx5(Game game) {
-        super(game, MonsterType.TX5);
-        this.game = game;
+    private final TorusVerseGame torusVerseGame;
+    public Tx5(TorusVerseGame torusVerseGame) {
+        super(torusVerseGame, MonsterType.TX5);
+        this.torusVerseGame = torusVerseGame;
     }
 
     @Override
     protected void walkApproach() {
-        Location pacLocation = game.pacMan.getLocation();
+        Location pacLocation = torusVerseGame.pacMan.getLocation();
         double oldDirection = getDirection();
 
         // Walking approach:
@@ -28,7 +28,7 @@ public class Tx5 extends Monster {
         {
             next = walkRandom(oldDirection);
         }
-        game.getGameCallback().monsterLocationChanged(this);
+        torusVerseGame.getGameCallback().monsterLocationChanged(this);
         addVisitedList(next);
     }
 }

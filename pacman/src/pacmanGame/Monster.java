@@ -14,10 +14,10 @@ public abstract class Monster extends PacActor
   private int seed = 0;
   private Random randomiser = new Random(0);
 
-  public Monster(Game game, MonsterType type)
+  public Monster(TorusVerseGame torusVerseGame, MonsterType type)
   {
     super("sprites/" + type.getImageName());
-    this.game = game;
+    this.torusVerseGame = torusVerseGame;
     this.type = type;
   }
 

@@ -9,9 +9,9 @@ import java.util.Queue;
 
 public class SearchPillAndItem implements SearchStrategy {
     @Override
-    public Location[] search(Game game, PacMan actor) {
+    public Location[] search(TorusVerseGame torusVerseGame, PacMan actor) {
         int[][] dirs = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}}; // WEST, NORTH, EAST, SOUTH
-        boolean[][] visited = new boolean[game.getNumHorzCells()][game.getNumVertCells()];
+        boolean[][] visited = new boolean[torusVerseGame.getNumHorzCells()][torusVerseGame.getNumVertCells()];
         Queue<Location> queue = new LinkedList<>();
         Map<Location, Location> pathTo = new HashMap<>(); // store the path to each reachable location
         Location start = actor.getLocation();
@@ -36,10 +36,10 @@ public class SearchPillAndItem implements SearchStrategy {
                 Location next = new Location(x, y);
 
                 // Check if there is portal at current position
-                Portal portal = game.getPortalAt(current);
+                Portal portal = torusVerseGame.getPortalAt(current);
                 if (portal != null) {
                     // Find the other side
-                    Location portalOtherEnd = game.getOtherPortalEnd(portal).getLocation();
+                    Location portalOtherEnd = torusVerseGame.getOtherPortalEnd(portal).getLocation();
                     if (!visited[portalOtherEnd.getX()][portalOtherEnd.getY()]) {
                         queue.offer(portalOtherEnd);
                         visited[portalOtherEnd.getX()][portalOtherEnd.getY()] = true;
@@ -47,7 +47,7 @@ public class SearchPillAndItem implements SearchStrategy {
                     }
                 }
 
-                if (x >= 0 && x < game.getNumHorzCells() && y >= 0 && y < game.getNumVertCells()
+                if (x >= 0 && x < torusVerseGame.getNumHorzCells() && y >= 0 && y < torusVerseGame.getNumVertCells()
                         && actor.canMove(next) && !visited[x][y]) {
                     queue.offer(next);
                     visited[x][y] = true;

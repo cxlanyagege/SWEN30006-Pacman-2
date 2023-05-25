@@ -14,40 +14,33 @@ import java.util.Properties;
 import java.util.List;
 
 
-public class Game extends GameGrid {
+public class TorusVerseGame extends GameGrid {
     private final static int nbHorzCells = 20;
     private final static int nbVertCells = 11;
-    protected PacManGameGrid grid = new PacManGameGrid(nbHorzCells, nbVertCells);
 
     protected PacMan pacMan = new PacMan(this);
 
-    //private Monster troll = new Monster(this, MonsterType.Troll);
-    //private Monster tx5 = new Monster(this, MonsterType.TX5);
-    private ArrayList<Monster> trolls = new ArrayList<>();
-    private ArrayList<Monster> tx5s = new ArrayList<>();
-    private ArrayList<Location> pillAndItemLocations = new ArrayList<Location>();
-    private ArrayList<Actor> iceCubes = new ArrayList<Actor>();
-    private Map<Color, ArrayList<Portal>> portals = new HashMap<Color, ArrayList<Portal>>();
-    private Map<Actor, Portal> actorToLastPortalMap = new HashMap<Actor, Portal>();
+    private final ArrayList<Monster> trolls = new ArrayList<>();
+    private final  ArrayList<Monster> tx5s = new ArrayList<>();
+    private final ArrayList<Location> pillAndItemLocations = new ArrayList<>();
+    private final  ArrayList<Actor> iceCubes = new ArrayList<>();
+    private final Map<Color, ArrayList<Portal>> portals = new HashMap<>();
+    private final Map<Actor, Portal> actorToLastPortalMap = new HashMap<>();
 
-    private ArrayList<Actor> goldPieces = new ArrayList<Actor>();
-    private GameCallback gameCallback;
-    //private Properties properties;
-    private int seed = 30006;
-    //private ArrayList<Location> propertyPillLocations = new ArrayList<>();
-    //private ArrayList<Location> propertyGoldLocations = new ArrayList<>();
-    private int currentMapIndex;
+    private final ArrayList<Actor> goldPieces = new ArrayList<>();
+    private final GameCallback gameCallback;
 
     protected List<NewGameGrid> grids = new ArrayList<>();
     protected NewGameGrid currentGrid;
     private boolean pacManAdded = false;
 
 
-    public Game(GameCallback gameCallback, Properties properties, List<String> mapStrings) {
+    public TorusVerseGame(GameCallback gameCallback, Properties properties, List<String> mapStrings) {
         // Setup game
         super(nbHorzCells, nbVertCells, 20, false);
         this.gameCallback = gameCallback;
-        currentMapIndex = 0;
+
+        int currentMapIndex = 0;
 
         // Create NewGameGrid objects for each mapString
         for (String mapString : mapStrings) {
@@ -78,7 +71,8 @@ public class Game extends GameGrid {
         setKeyRepeatPeriod(150);
 
         // Setup Random seeds and slow down
-        seed = Integer.parseInt(properties.getProperty("seed"));
+
+        int seed = Integer.parseInt(properties.getProperty("seed"));
         //TODO: Conflict
         //pacMan.setSeed(seed);
         pacMan.setSlowDown(3);
@@ -164,21 +158,21 @@ public class Game extends GameGrid {
                 }
             }
 
-//            for (Monster troll : trolls) {
-//                if (troll.getLocation().equals(pacMan.getLocation())) {
-//                    hasPacmanBeenHit = true;
-//                    break;
-//                }
-//            }
-//
-//            if (!hasPacmanBeenHit) {
-//                for (Monster tx5 : tx5s) {
-//                    if (tx5.getLocation().equals(pacMan.getLocation())) {
-//                        hasPacmanBeenHit = true;
-//                        break;
-//                    }
-//                }
-//            }
+            for (Monster troll : trolls) {
+                if (troll.getLocation().equals(pacMan.getLocation())) {
+                    hasPacmanBeenHit = true;
+                    break;
+                }
+            }
+
+            if (!hasPacmanBeenHit) {
+                for (Monster tx5 : tx5s) {
+                    if (tx5.getLocation().equals(pacMan.getLocation())) {
+                        hasPacmanBeenHit = true;
+                        break;
+                    }
+                }
+            }
 
             if (portals.size() != 0) {
                 try {
@@ -465,10 +459,10 @@ public class Game extends GameGrid {
     }
 
     public int getNumHorzCells() {
-        return this.nbHorzCells;
+        return nbHorzCells;
     }
 
     public int getNumVertCells() {
-        return this.nbVertCells;
+        return nbVertCells;
     }
 }

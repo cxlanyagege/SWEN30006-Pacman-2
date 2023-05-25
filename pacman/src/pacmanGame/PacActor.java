@@ -3,12 +3,10 @@ package src.pacmanGame;
 import ch.aplu.jgamegrid.*;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Random;
 
 public abstract class PacActor extends Actor {
 
-    protected Game game;
+    protected TorusVerseGame torusVerseGame;
     //private ArrayList<Location> visitedList = new ArrayList<Location>();
 
     //private final int listLength = 15;
@@ -24,8 +22,8 @@ public abstract class PacActor extends Actor {
 
     protected boolean canMove(Location location) {
         Color c = getBackground().getColor(location);
-        return !c.equals(Color.gray) && location.getX() < game.getNumHorzCells()
-                && location.getX() >= 0 && location.getY() < game.getNumVertCells() && location.getY() >= 0;
+        return !c.equals(Color.gray) && location.getX() < torusVerseGame.getNumHorzCells()
+                && location.getX() >= 0 && location.getY() < torusVerseGame.getNumVertCells() && location.getY() >= 0;
     }
 }
 

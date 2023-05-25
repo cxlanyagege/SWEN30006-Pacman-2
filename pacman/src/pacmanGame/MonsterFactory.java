@@ -1,10 +1,10 @@
 package src.pacmanGame;
 
 public class MonsterFactory {
-    public static Monster createMonster(Game game, MonsterType type) {
+    public static Monster createMonster(TorusVerseGame torusVerseGame, MonsterType type) {
         return switch (type) {
-            case TX5 -> new Tx5(game);
-            case Troll -> new Troll(game);
+            case TX5 -> new Tx5(torusVerseGame);
+            case Troll -> new Troll(torusVerseGame);
         };
     }
 }

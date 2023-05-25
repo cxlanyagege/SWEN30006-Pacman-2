@@ -2,7 +2,7 @@ package src.facade;
 
 import src.Driver;
 import src.matachi.mapeditor.editor.Controller;
-import src.pacmanGame.Game;
+import src.pacmanGame.TorusVerseGame;
 import src.pacmanGame.GameConfig;
 
 import java.util.List;
@@ -14,7 +14,7 @@ public class Facade {
     private List<String> mapStrings;
 
     private Controller controller;
-    private Game game;
+    private TorusVerseGame torusVerseGame;
 
     private boolean mapLoaded = false;
 
@@ -44,7 +44,7 @@ public class Facade {
 
         if (mapLoaded) {
 
-            this.game = new Game(gameConfig.getGameCallback(), gameConfig.getProperties(), mapStrings);
+            this.torusVerseGame = new TorusVerseGame(gameConfig.getGameCallback(), gameConfig.getProperties(), mapStrings);
             //System.out.println(mapStrings.get(0));
         } else {
             System.out.println("Map not loaded");

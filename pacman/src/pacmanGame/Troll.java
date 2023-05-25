@@ -3,10 +3,10 @@ package src.pacmanGame;
 import ch.aplu.jgamegrid.Location;
 
 public class Troll extends Monster {
-    private final Game game;
-    public Troll(Game game) {
-        super(game, MonsterType.Troll);
-        this.game = game;
+    private final TorusVerseGame torusVerseGame;
+    public Troll(TorusVerseGame torusVerseGame) {
+        super(torusVerseGame, MonsterType.Troll);
+        this.torusVerseGame = torusVerseGame;
     }
 
     @Override
@@ -16,7 +16,7 @@ public class Troll extends Monster {
         // Walking approach:
         // Troll: Random walk.
         Location next = walkRandom(oldDirection);
-        game.getGameCallback().monsterLocationChanged(this);
+        torusVerseGame.getGameCallback().monsterLocationChanged(this);
         addVisitedList(next);
     }
 }
