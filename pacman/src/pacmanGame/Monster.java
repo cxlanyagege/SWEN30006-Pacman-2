@@ -3,12 +3,10 @@
 package src.pacmanGame;
 
 import ch.aplu.jgamegrid.*;
-import java.awt.Color;
 import java.util.*;
 
-public class Monster extends Actor
+public abstract class Monster extends PacActor
 {
-  private Game game;
   private MonsterType type;
   private ArrayList<Location> visitedList = new ArrayList<Location>();
   private final int listLength = 10;
@@ -57,92 +55,57 @@ public class Monster extends Actor
       setHorzMirror(true);
   }
 
-  private void walkApproach()
-  {
-    Location pacLocation = game.pacMan.getLocation();
-    double oldDirection = getDirection();
+  protected abstract void walkApproach();
 
-    // Walking approach:
-    // TX5: Determine direction to pacActor and try to move in that direction. Otherwise, random walk.
-    // Troll: Random walk.
-    Location.CompassDirection compassDir =
-      getLocation().get4CompassDirectionTo(pacLocation);
-    Location next = getLocation().getNeighbourLocation(compassDir);
-    setDirection(compassDir);
-    if (type == MonsterType.TX5 &&
-      !isVisited(next) && canMove(next))
+  protected Location walkRandom(double oldDirection)
+  {
+    // Random walk
+    int sign = randomiser.nextDouble() < 0.5 ? 1 : -1;
+    setDirection(oldDirection);
+    turn(sign * 90);  // Try to turn left/right
+    Location next = getNextMoveLocation();
+    if (canMove(next))
     {
       setLocation(next);
     }
-    else
-    {
-      // Random walk
-      int sign = randomiser.nextDouble() < 0.5 ? 1 : -1;
+    else {
       setDirection(oldDirection);
-      turn(sign * 90);  // Try to turn left/right
       next = getNextMoveLocation();
-      if (canMove(next))
-      {
+      if (canMove(next)) {// Try to move forward{
         setLocation(next);
-      }
-      else
-      {
+      } else {
         setDirection(oldDirection);
+        turn(-sign * 90);  // Try to turn right/left
         next = getNextMoveLocation();
-        if (canMove(next)) // Try to move forward
-        {
+        if (canMove(next)) {
           setLocation(next);
-        }
-        else
-        {
+        } else {
           setDirection(oldDirection);
-          turn(-sign * 90);  // Try to turn right/left
+          turn(180);  // Turn backward
           next = getNextMoveLocation();
-          if (canMove(next))
-          {
-            setLocation(next);
-          }
-          else
-          {
-
-            setDirection(oldDirection);
-            turn(180);  // Turn backward
-            next = getNextMoveLocation();
-            setLocation(next);
-          }
+          setLocation(next);
         }
       }
     }
-    game.getGameCallback().monsterLocationChanged(this);
-    addVisitedList(next);
+    return next;
   }
 
   public MonsterType getType() {
     return type;
   }
 
-  private void addVisitedList(Location location)
+  void addVisitedList(Location location)
   {
     visitedList.add(location);
     if (visitedList.size() == listLength)
       visitedList.remove(0);
   }
 
-  private boolean isVisited(Location location)
+  boolean isVisited(Location location)
   {
     for (Location loc : visitedList)
       if (loc.equals(location))
         return true;
     return false;
-  }
-
-  private boolean canMove(Location location)
-  {
-    Color c = getBackground().getColor(location);
-    if (c.equals(Color.gray) || location.getX() >= game.getNumHorzCells()
-          || location.getX() < 0 || location.getY() >= game.getNumVertCells() || location.getY() < 0)
-      return false;
-    else
-      return true;
   }
 }

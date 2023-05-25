@@ -24,11 +24,8 @@ public abstract class PacActor extends Actor {
 
     protected boolean canMove(Location location) {
         Color c = getBackground().getColor(location);
-        if (c.equals(Color.gray) || location.getX() >= game.getNumHorzCells()
-                || location.getX() < 0 || location.getY() >= game.getNumVertCells() || location.getY() < 0)
-            return false;
-        else
-            return true;
+        return !c.equals(Color.gray) && location.getX() < game.getNumHorzCells()
+                && location.getX() >= 0 && location.getY() < game.getNumVertCells() && location.getY() >= 0;
     }
 }
 
