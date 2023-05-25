@@ -9,7 +9,7 @@ import java.util.Queue;
 
 public class SearchPillAndItem implements SearchStrategy {
     @Override
-    public Location[] search(Game game, PacActor actor) {
+    public Location[] search(Game game, PacMan actor) {
         int[][] dirs = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}}; // WEST, NORTH, EAST, SOUTH
         boolean[][] visited = new boolean[game.getNumHorzCells()][game.getNumVertCells()];
         Queue<Location> queue = new LinkedList<>();

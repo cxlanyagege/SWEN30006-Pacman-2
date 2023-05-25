@@ -19,7 +19,7 @@ public class Game extends GameGrid {
     private final static int nbVertCells = 11;
     protected PacManGameGrid grid = new PacManGameGrid(nbHorzCells, nbVertCells);
 
-    protected PacActor pacActor = new PacActor(this);
+    protected PacMan pacMan = new PacMan(this);
 
     //private Monster troll = new Monster(this, MonsterType.Troll);
     //private Monster tx5 = new Monster(this, MonsterType.TX5);
@@ -40,7 +40,7 @@ public class Game extends GameGrid {
 
     protected List<NewGameGrid> grids = new ArrayList<>();
     protected NewGameGrid currentGrid;
-    private boolean pacActorAdded = false;
+    private boolean pacManAdded = false;
 
 
     public Game(GameCallback gameCallback, Properties properties, List<String> mapStrings) {
@@ -48,7 +48,7 @@ public class Game extends GameGrid {
         super(nbHorzCells, nbVertCells, 20, false);
         this.gameCallback = gameCallback;
         currentMapIndex = 0;
-        PacActor panMan = new PacActor(this);
+        PacMan pacMan = new PacMan(this);
 
 
         // Create NewGameGrid objects for each mapString
@@ -67,8 +67,8 @@ public class Game extends GameGrid {
 
         // Setup for auto test
         //TODO: Conflict
-        //pacActor.setPropertyMoves(properties.getProperty("PacMan.move"));
-        pacActor.setAuto(Boolean.parseBoolean(properties.getProperty("PacMan.isAuto")));
+        //pacMan.setPropertyMoves(properties.getProperty("PacMan.move"));
+        //pacMan.setAuto(Boolean.parseBoolean(properties.getProperty("pacMan.isAuto")));
 
         // loadMap();
         //load map from mapStrings
@@ -76,14 +76,14 @@ public class Game extends GameGrid {
         drawGridFromMap(bg);
 
         // pacman keyPad listener
-        addKeyRepeatListener(pacActor);
+        addKeyRepeatListener(pacMan);
         setKeyRepeatPeriod(150);
 
         // Setup Random seeds and slow down
         seed = Integer.parseInt(properties.getProperty("seed"));
         //TODO: Conflict
-        //pacActor.setSeed(seed);
-        pacActor.setSlowDown(3);
+        //pacMan.setSeed(seed);
+        pacMan.setSlowDown(3);
         for (Monster troll : trolls) {
             troll.setSeed(seed);
             troll.setSlowDown(3);
@@ -112,14 +112,14 @@ public class Game extends GameGrid {
 
         do {
 
-            hasPacmanEatAllPills = pacActor.getNbPills() >= maxPillsAndItems;
+            hasPacmanEatAllPills = pacMan.getNbPills() >= maxPillsAndItems;
 
             // If completed one map begin the next map
 
             if (hasPacmanEatAllPills) {
 
                 for (Actor actor : getActors()) {
-                    if (actor != pacActor) {
+                    if (actor != pacMan) {
                         actor.removeSelf();
                     }
                 }
@@ -144,7 +144,7 @@ public class Game extends GameGrid {
                     drawGridFromMap(bg);
 
                     //set Actor properties for new map
-                    pacActor.setSlowDown(3);
+                    pacMan.setSlowDown(3);
                     for (Monster troll : trolls) {
                         troll.setSeed(seed);
                         troll.setSlowDown(3);
@@ -156,7 +156,7 @@ public class Game extends GameGrid {
                     }
 
 
-                    pacActor.setNbPills(0);
+                    pacMan.setNbPills(0);
                     setupItemsLocationsFromMap();
                     maxPillsAndItems = countItemsFromMap();
 
@@ -167,7 +167,7 @@ public class Game extends GameGrid {
             }
 
 //            for (Monster troll : trolls) {
-//                if (troll.getLocation().equals(pacActor.getLocation())) {
+//                if (troll.getLocation().equals(pacMan.getLocation())) {
 //                    hasPacmanBeenHit = true;
 //                    break;
 //                }
@@ -175,7 +175,7 @@ public class Game extends GameGrid {
 //
 //            if (!hasPacmanBeenHit) {
 //                for (Monster tx5 : tx5s) {
-//                    if (tx5.getLocation().equals(pacActor.getLocation())) {
+//                    if (tx5.getLocation().equals(pacMan.getLocation())) {
 //                        hasPacmanBeenHit = true;
 //                        break;
 //                    }
@@ -184,7 +184,7 @@ public class Game extends GameGrid {
 
             if (portals.size() != 0) {
                 try {
-                    checkAndHandlePortalCollision(pacActor);
+                    checkAndHandlePortalCollision(pacMan);
                     for (Monster troll : trolls) {
                         checkAndHandlePortalCollision(troll);
                     }
@@ -206,14 +206,14 @@ public class Game extends GameGrid {
         delay(120);
 
 
-        Location loc = pacActor.getLocation();
+        Location loc = pacMan.getLocation();
         for (Monster troll : trolls) {
             troll.setStopMoving(true);
         }
         for (Monster tx5 : tx5s) {
             tx5.setStopMoving(true);
         }
-        pacActor.removeSelf();
+        pacMan.removeSelf();
 
         String title = "";
         if (hasPacmanBeenHit) {
@@ -318,12 +318,12 @@ public class Game extends GameGrid {
             // If the actor is at one portal and is not currently inside any portal, move them to the other portal
             if (actor.getLocation().equals(portal1.getLocation()) &&
                     actorToLastPortalMap.get(actor) == null) {
-                actor.setLocation(portal2.getLocation());
-                actorToLastPortalMap.put(actor, portal1); // actor is now inside portal1
+                    actor.setLocation(portal2.getLocation());
+                    actorToLastPortalMap.put(actor, portal1); // actor is now inside portal1
             } else if (actor.getLocation().equals(portal2.getLocation()) &&
                     actorToLastPortalMap.get(actor) == null) {
-                actor.setLocation(portal1.getLocation());
-                actorToLastPortalMap.put(actor, portal2); // actor is now inside portal2
+                    actor.setLocation(portal1.getLocation());
+                    actorToLastPortalMap.put(actor, portal2); // actor is now inside portal2
             } else if (actorToLastPortalMap.get(actor) != null &&
                     !actor.getLocation().equals(portal1.getLocation()) &&
                     !actor.getLocation().equals(portal2.getLocation()) &&
@@ -403,11 +403,11 @@ public class Game extends GameGrid {
                 } else if (a == 'e') {//ice
                     putIce(bg, location);
                 } else if (a == 'f') {//pacman
-                    if (!pacActorAdded) {
-                        addActor(pacActor, location);
-                        pacActorAdded = true;
+                    if (!pacManAdded) {
+                        addActor(pacMan, location);
+                        pacManAdded = true;
                     } else {
-                        pacActor.setLocation(location);
+                        pacMan.setLocation(location);
                     }
 
                 } else if (a == 'g') {//troll

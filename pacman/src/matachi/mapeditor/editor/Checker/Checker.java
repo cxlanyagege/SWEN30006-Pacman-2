@@ -23,10 +23,10 @@ public class Checker {
     }
 
     public boolean levelCheck() {
-        LevelChecker pacManStartChecker = LevelCheckerFactory.createPacManStartChecker(model,currentFileName);
-        LevelChecker portalCountChecker = LevelCheckerFactory.createPortalCountChecker(model,currentFileName);
-        LevelChecker goldAndPillCountChecker = LevelCheckerFactory.createGoldAndPillCountChecker(model,currentFileName);
-        LevelChecker goldAndPillAccessibilityChecker = LevelCheckerFactory.createGoldAndPillAccessibilityChecker(model,currentFileName);
+        LevelChecker pacManStartChecker = LevelCheckerFactory.createPacManStartChecker(model, currentFileName);
+        LevelChecker portalCountChecker = LevelCheckerFactory.createPortalCountChecker(model, currentFileName);
+        LevelChecker goldAndPillCountChecker = LevelCheckerFactory.createGoldAndPillCountChecker(model, currentFileName);
+        LevelChecker goldAndPillAccessibilityChecker = LevelCheckerFactory.createGoldAndPillAccessibilityChecker(model, currentFileName);
 
         return pacManStartChecker.check()
                 && portalCountChecker.check()
