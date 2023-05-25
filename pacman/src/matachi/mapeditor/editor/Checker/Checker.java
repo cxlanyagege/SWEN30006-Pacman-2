@@ -1,5 +1,7 @@
-package src.matachi.mapeditor.editor;
+package src.matachi.mapeditor.editor.Checker;
+import static src.matachi.mapeditor.editor.Checker.LogUtil.writeToLogFile;
 
+import src.matachi.mapeditor.editor.Controller;
 import src.matachi.mapeditor.grid.Grid;
 
 import java.io.File;
@@ -44,7 +46,7 @@ public class Checker {
         if (mapFiles == null || mapFiles.length == 0) {
             String message = String.format("[Game %s – no maps found]", gameFolder.getName());
             System.out.println(message);
-            writeToLogFile(message);
+            writeToLogFile(message,currentFileName);
             flag = false;
         }
 
@@ -77,7 +79,7 @@ public class Checker {
 
         if (pacManStartCount != 1) {
             String message = String.format("[Level %s – no start or more than one start for PacMan: %s]", currentFileName, String.join("; ", pacManStartCoordinates));
-            writeToLogFile(message);
+            writeToLogFile(message,currentFileName);
             flag = false;
         }
 
@@ -118,7 +120,7 @@ public class Checker {
                     portalDarkGoldCoordinates.size(), portalDarkGoldCoordinates,
                     portalDarkGrayCoordinates.size(), portalDarkGrayCoordinates);
             System.out.println(message);
-            writeToLogFile(message);
+            writeToLogFile(message,currentFileName);
         }
 
         return validPortalCount;
@@ -143,7 +145,7 @@ public class Checker {
         if (goldCount < 2 || pillCount < 2) {
             String message = String.format("[Level %s - Insufficient number of Gold or Pill: Gold = %d, Pill = %d]",
                     currentFileName, goldCount, pillCount);
-            writeToLogFile(message);
+            writeToLogFile(message,currentFileName);
             flag = false;
         }
 
@@ -202,7 +204,7 @@ public class Checker {
             String goldPositionsString = String.join("; ", goldPositionsList);
             String message = String.format("[Level %s - Gold not accessible: %s]", currentFileName, goldPositionsString);
             System.out.println(message);
-            writeToLogFile(message);
+            writeToLogFile(message,currentFileName);
         }
 
         // 如果存在不可访问的药丸位置
@@ -218,7 +220,7 @@ public class Checker {
             String pillPositionsString = String.join("; ", pillPositionsList);
             String message = String.format("[Level %s - Pill not accessible: %s]", currentFileName, pillPositionsString);
             System.out.println(message);
-            writeToLogFile(message);
+            writeToLogFile(message,currentFileName);
         }
         return false;
     }
@@ -308,26 +310,6 @@ public class Checker {
     }
 
 
-
-    private void writeToLogFile(String message) {
-        try {
-            String logDirectoryName = "logDocument"; // 日志文件夹名称
-            File logDirectory = new File(System.getProperty("user.dir"), logDirectoryName);
-            if (!logDirectory.exists()) {
-                logDirectory.mkdir(); // 创建日志文件夹
-            }
-
-            String logFileName = currentFileName + "_log.txt"; // 日志文件名为当前文件名加上后缀.log
-            File logFile = new File(logDirectory, logFileName);
-
-            FileWriter writer = new FileWriter(logFile, true);
-            writer.write(message + "\n");
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     // game checker helper methods
 
     private boolean checkMapFileSequence(File[] mapFiles) {
@@ -353,7 +335,7 @@ public class Checker {
                 String message = String.format("[Game %s – multiple maps at same level: %s]",
                         currentFileName, String.join("; ", levelFiles));
                 System.out.println(message);
-                writeToLogFile(message);
+                writeToLogFile(message,currentFileName);
                 flag = false;
             }
         }
