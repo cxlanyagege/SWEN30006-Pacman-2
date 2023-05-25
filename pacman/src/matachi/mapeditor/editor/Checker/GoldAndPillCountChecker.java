@@ -30,7 +30,7 @@ public class GoldAndPillCountChecker implements LevelChecker {
             }
         }
 
-        if (goldCount < 2 || pillCount < 2) {
+        if ((goldCount + pillCount) < 2) {
             String message = String.format("[Level %s - Insufficient number of Gold or Pill: Gold = %d, Pill = %d]",
                     currentFileName, goldCount, pillCount);
             writeToLogFile(message,currentFileName);
