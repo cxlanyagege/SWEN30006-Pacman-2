@@ -63,7 +63,7 @@ public class GoldAndPillAccessibilityChecker implements LevelChecker {
             for (int position : inaccessibleGoldPositions) {
                 int row = position / model.getWidth();
                 int col = position % model.getWidth();
-                String positionString = "(" + col + ", " + row + ")";
+                String positionString = "(" + (col + 1) + ", " + (row + 1) + ")";
                 goldPositionsList.add(positionString);
             }
 
@@ -79,7 +79,7 @@ public class GoldAndPillAccessibilityChecker implements LevelChecker {
             for (int position : inaccessiblePillPositions) {
                 int row = position / model.getWidth();
                 int col = position % model.getWidth();
-                String positionString = "(" + col + ", " + row + ")";
+                String positionString = "(" + (col + 1) + ", " + (row + 1) + ")";
                 pillPositionsList.add(positionString);
             }
 
@@ -94,7 +94,6 @@ public class GoldAndPillAccessibilityChecker implements LevelChecker {
     private boolean isAccessible(int startPosition) {
         boolean[] visited = new boolean[model.getWidth() * model.getHeight()];
 
-        // 使用广度优先搜索算法检查可访问性
         Queue<Integer> queue = new ArrayDeque<>();
         queue.offer(startPosition);
         visited[startPosition] = true;
@@ -104,75 +103,76 @@ public class GoldAndPillAccessibilityChecker implements LevelChecker {
             int row = position / model.getWidth();
             int col = position % model.getWidth();
 
-            // 检查上方方向
-            if (row > 0 && isAccessibleTile(col, row - 1, visited, queue)) {
-                return true;
+            // 检查四个方向
+            if (row > 0) {
+                isAccessibleTile(col, row - 1, visited, queue);
             }
-
-            // 检查下方方向
-            if (row < model.getHeight() - 1 && isAccessibleTile(col, row + 1, visited, queue)) {
-                return true;
+            if (row < model.getHeight() - 1) {
+                isAccessibleTile(col, row + 1, visited, queue);
             }
-
-            // 检查左方方向
-            if (col > 0 && isAccessibleTile(col - 1, row, visited, queue)) {
-                return true;
+            if (col > 0) {
+                isAccessibleTile(col - 1, row, visited, queue);
             }
+            if (col < model.getWidth() - 1) {
+                isAccessibleTile(col + 1, row, visited, queue);
+            }
+        }
 
-            // 检查右方方向
-            if (col < model.getWidth() - 1 && isAccessibleTile(col + 1, row, visited, queue)) {
-                return true;
+        // 通过 Pacman 位置的访问状态检查可访问性
+        for (int i = 0; i < model.getWidth(); i++) {
+            for (int j = 0; j < model.getHeight(); j++) {
+                char tileChar = model.getTile(i, j);
+                if (tileChar == 'f' && visited[j * model.getWidth() + i]) {
+                    return true;
+                }
             }
         }
 
         return false;
     }
 
-    private boolean isAccessibleTile(int col, int row, boolean[] visited, Queue<Integer> queue) {
+    private void isAccessibleTile(int col, int row, boolean[] visited, Queue<Integer> queue) {
         int position = row * model.getWidth() + col;
         if (!visited[position]) {
             char tileChar = model.getTile(col, row);
-            if (tileChar == 'a' || tileChar == 'c' || tileChar == 'd' || tileChar == 'e' || tileChar == 'f' || isPortal(tileChar)) {
+            if (tileChar == 'a' || tileChar == 'c' || tileChar == 'd' || tileChar == 'e' || tileChar == 'f') {
                 visited[position] = true;
                 queue.offer(position);
-
-                if (isPortal(tileChar)) {
-                    // 获取对应传送门的位置
-                    int pairPosition = getPortalPairPosition(tileChar);
-                    if (pairPosition != -1 && !visited[pairPosition]) {
-                        System.out.println(queue);
+            } else if (isPortal(tileChar)) {
+                // 只有在找到配对的传送门并且它可以被访问时，才将其视为可访问
+                int pairPosition = getPortalPairPosition(tileChar, position);
+                if (pairPosition != -1) {
+                    visited[position] = true;
+                    queue.offer(position);
+                    if (!visited[pairPosition]) {
                         queue.offer(pairPosition);
-                        System.out.println(queue);
-                        //visited[pairPosition] = true;
+                        visited[pairPosition] = true;
                     }
-                }
-
-                if (tileChar == 'f') {
-                    return true; // 找到可访问的位置
                 }
             }
         }
-        return false;
     }
 
     private boolean isPortal(char tileChar) {
         return tileChar == 'i' || tileChar == 'j' || tileChar == 'k' || tileChar == 'l';
     }
 
-    private int getPortalPairPosition(char portalChar) {
-        boolean firstPortalFound = false;
+    private int getPortalPairPosition(char portalChar, int currentPos) {
+        List<Integer> portalPositions = new ArrayList<>();
         for (int row = 0; row < model.getHeight(); row++) {
             for (int col = 0; col < model.getWidth(); col++) {
                 char tileChar = model.getTile(col, row);
                 if (tileChar == portalChar) {
-                    if (firstPortalFound) {
-                        return row * model.getWidth() + col;
-                    }
-                    firstPortalFound = true;
+                    portalPositions.add(row * model.getWidth() + col);
                 }
             }
         }
-        return -1; // 返回 -1 表示未找到对应的传送门
+        // 没有找到配对的传送门
+        if (portalPositions.size() != 2) {
+            return -1;
+        }
+        // 返回另一个传送门的位置
+        return portalPositions.get(0) == currentPos ? portalPositions.get(1) : portalPositions.get(0);
     }
 
 

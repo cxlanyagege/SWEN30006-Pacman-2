@@ -29,13 +29,13 @@ public class PortalCountChecker implements LevelChecker {
             for (int col = 0; col < model.getWidth(); col++) {
                 char tileChar = model.getTile(col, row);
                 if (tileChar == 'i') { // Portal White
-                    portalWhiteCoordinates.add("(" + col + ", " + row + ")");
+                    portalWhiteCoordinates.add("(" + (col + 1) + ", " + (row + 1) + ")");
                 } else if (tileChar == 'j') { // Portal Yellow
-                    portalYellowCoordinates.add("(" + col + ", " + row + ")");
+                    portalYellowCoordinates.add("(" + (col + 1) + ", " + (row + 1) + ")");
                 } else if (tileChar == 'k') { // Portal Dark Gold
-                    portalDarkGoldCoordinates.add("(" + col + ", " + row + ")");
+                    portalDarkGoldCoordinates.add("(" + (col + 1) + ", " + (row + 1) + ")");
                 } else if (tileChar == 'l') { // Portal Dark Gray
-                    portalDarkGrayCoordinates.add("(" + col + ", " + row + ")");
+                    portalDarkGrayCoordinates.add("(" + (col + 1) + ", " + (row + 1) + ")");
                 }
             }
         }

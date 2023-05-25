@@ -3,6 +3,7 @@ package src.matachi.mapeditor.editor;
 import org.jdom.Document;
 import org.jdom.input.SAXBuilder;
 import src.facade.Facade;
+import src.matachi.mapeditor.editor.Checker.Checker;
 
 
 import java.io.File;

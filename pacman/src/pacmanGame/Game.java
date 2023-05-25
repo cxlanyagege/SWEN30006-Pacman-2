@@ -64,9 +64,6 @@ public class Game extends GameGrid {
 
         currentGrid = grids.get(currentMapIndex);
 
-
-
-
         setSimulationPeriod(100);
         setTitle("[PacMan in the TorusVerse]");
 
@@ -129,12 +126,6 @@ public class Game extends GameGrid {
                     }
                 }
 
-//                for (Actor actor : getActors()) {
-//
-//                        actor.removeSelf();
-//
-//                }
-
                 trolls.clear();
                 tx5s.clear();
                 portals.clear();
@@ -163,11 +154,6 @@ public class Game extends GameGrid {
                     hasCompletedAllMaps = true;
                 }
             }
-
-
-
-
-
 
 //            for (Monster troll : trolls) {
 //                if (troll.getLocation().equals(pacActor.getLocation())) {

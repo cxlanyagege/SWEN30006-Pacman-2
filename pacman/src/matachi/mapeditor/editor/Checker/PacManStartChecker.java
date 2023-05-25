@@ -26,7 +26,7 @@ public class PacManStartChecker implements LevelChecker{
                 char tileChar = model.getTile(col, row);
                 if (tileChar == 'f') {
                     pacManStartCount++;
-                    pacManStartCoordinates.add("(" + col + ", " + row + ")");
+                    pacManStartCoordinates.add("(" + (col + 1) + ", " + (row + 1) + ")");
                 }
             }
         }

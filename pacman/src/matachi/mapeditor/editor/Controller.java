@@ -19,6 +19,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import src.Driver;
 import src.facade.Facade;
+import src.matachi.mapeditor.editor.Checker.Checker;
 import src.matachi.mapeditor.grid.Camera;
 import src.matachi.mapeditor.grid.Grid;
 import src.matachi.mapeditor.grid.GridCamera;
