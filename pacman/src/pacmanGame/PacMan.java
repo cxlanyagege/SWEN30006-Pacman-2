@@ -13,7 +13,7 @@ public class PacMan extends PacActor implements GGKeyRepeatListener
   private int idSprite = 0;
   private int nbPills = 0;
   private int score = 0;
-  //rivate Game game;
+
   private List<Location> pillAndItemLocations;
   private SearchStrategy searchPillAndItem = new SearchPillAndItem();
   public PacMan(Game game)

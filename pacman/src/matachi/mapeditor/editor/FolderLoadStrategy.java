@@ -55,7 +55,7 @@ public class FolderLoadStrategy implements LoadStrategy {
             if (numOffFiles == numPassCheck) {
                 System.out.println("All files pass check");
                 Checker checker = new Checker();
-                if (checker.gameCheck(selectedFile)) {
+                if (checker.gameCheck(selectedFile)!=null) {
                     facade.passMapString(mapStrings);
                     facade.mapLoaded();
                     new Thread(facade::startGame).start();
