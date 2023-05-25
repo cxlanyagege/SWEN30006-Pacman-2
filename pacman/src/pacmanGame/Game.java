@@ -22,7 +22,6 @@ public class Game extends GameGrid {
 
     protected PacActor pacActor = new PacActor(this);
 
-    //TODO: some level may have mulitple same monsters
     private Monster troll = new Monster(this, MonsterType.Troll);
     private Monster tx5 = new Monster(this, MonsterType.TX5);
     private ArrayList<Monster> trolls = new ArrayList<>();
@@ -76,11 +75,12 @@ public class Game extends GameGrid {
         setTitle("[PacMan in the TorusVerse]");
 
         // Setup for auto test
-        pacActor.setPropertyMoves(properties.getProperty("PacMan.move"));
+        //TODO: Conflict
+        //pacActor.setPropertyMoves(properties.getProperty("PacMan.move"));
         pacActor.setAuto(Boolean.parseBoolean(properties.getProperty("PacMan.isAuto")));
 
         // loadMap();
-        //TODO: load map from mapStrings
+        //load map from mapStrings
         GGBackground bg = getBg();
         drawGridFromMap(bg);
 
@@ -90,7 +90,8 @@ public class Game extends GameGrid {
 
         // Setup Random seeds and slow down
         seed = Integer.parseInt(properties.getProperty("seed"));
-        pacActor.setSeed(seed);
+        //TODO: Conflict
+        //pacActor.setSeed(seed);
         pacActor.setSlowDown(3);
         for (Monster troll : trolls) {
             troll.setSeed(seed);
@@ -151,7 +152,8 @@ public class Game extends GameGrid {
 
 
                     drawGridFromMap(bg);
-                    pacActor.setNbPills(0);
+                    //TODO: Conflict
+                    //pacActor.setNbPills(0);
                     setupItemsLocationsFromMap();
                     maxPillsAndItems = countItemsFromMap();
 
