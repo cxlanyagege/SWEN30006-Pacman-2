@@ -189,34 +189,37 @@ public class Checker {
             return true;
         }
 
+        // 如果存在不可访问的金币位置
         if (!inaccessibleGoldPositions.isEmpty()) {
-            StringBuilder positionsString = new StringBuilder();
+            List<String> goldPositionsList = new ArrayList<>();
             for (int position : inaccessibleGoldPositions) {
                 int row = position / model.getWidth();
                 int col = position % model.getWidth();
-                positionsString.append("(").append(col).append(", ").append(row).append("); ");
+                String positionString = "(" + col + ", " + row + ")";
+                goldPositionsList.add(positionString);
             }
 
-            String message = String.format("[Level %s - Gold not accessible: %s]",
-                    currentFileName, positionsString.toString());
+            String goldPositionsString = String.join("; ", goldPositionsList);
+            String message = String.format("[Level %s - Gold not accessible: %s]", currentFileName, goldPositionsString);
             System.out.println(message);
             writeToLogFile(message);
         }
 
-        if (!inaccessiblePillPositions.isEmpty()) {// 如果存在不可访问的药丸位置
-            StringBuilder positionsString = new StringBuilder();
+        // 如果存在不可访问的药丸位置
+        if (!inaccessiblePillPositions.isEmpty()) {
+            List<String> pillPositionsList = new ArrayList<>();
             for (int position : inaccessiblePillPositions) {
                 int row = position / model.getWidth();
                 int col = position % model.getWidth();
-                positionsString.append("(").append(col).append(", ").append(row).append("); ");
+                String positionString = "(" + col + ", " + row + ")";
+                pillPositionsList.add(positionString);
             }
 
-            String message = String.format("[Level %s - Pill not accessible: %s]",
-                    currentFileName, positionsString.toString());
+            String pillPositionsString = String.join("; ", pillPositionsList);
+            String message = String.format("[Level %s - Pill not accessible: %s]", currentFileName, pillPositionsString);
             System.out.println(message);
             writeToLogFile(message);
         }
-
         return false;
     }
 
