@@ -37,11 +37,11 @@ public class MapStringParser {
                     default -> '0';
                 };
 
-                Controller.getInstance().model.setTile(x, y, tileNr);
+                Controller.getInstance().getModel().setTile(x, y, tileNr);
             }
         }
 
-        return Controller.getInstance().model.getMapAsString();
+        return Controller.getInstance().getModel().getMapAsString();
     }
 }
 
