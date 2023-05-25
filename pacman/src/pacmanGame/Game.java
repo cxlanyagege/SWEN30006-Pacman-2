@@ -48,8 +48,6 @@ public class Game extends GameGrid {
         super(nbHorzCells, nbVertCells, 20, false);
         this.gameCallback = gameCallback;
         currentMapIndex = 0;
-        PacMan pacMan = new PacMan(this);
-
 
         // Create NewGameGrid objects for each mapString
         for (String mapString : mapStrings) {
