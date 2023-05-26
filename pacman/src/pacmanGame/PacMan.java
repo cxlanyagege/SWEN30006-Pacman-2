@@ -11,7 +11,7 @@ public class PacMan extends PacActor implements GGKeyRepeatListener
 {
   private static final int nbSprites = 4;
   private int idSprite = 0;
-  private int nbPills = 0;
+  private volatile int nbPills = 0;
   private int score = 0;
 
   private List<Location> pillAndItemLocations;
@@ -28,7 +28,7 @@ public class PacMan extends PacActor implements GGKeyRepeatListener
     pillAndItemLocations = torusVerseGame.getPillAndItemLocations();
   }
 
-  public void setNbPills(int nbPills) {
+  public synchronized void setNbPills(int nbPills) {
     this.nbPills = nbPills;
   }
 
@@ -101,8 +101,7 @@ public class PacMan extends PacActor implements GGKeyRepeatListener
     }
   }
 
-  public int getNbPills() {
-    System.out.println("Current eat pill: " + nbPills);
+  public synchronized int getNbPills() {
     return nbPills;
   }
 
