@@ -6,9 +6,9 @@ import ch.aplu.jgamegrid.*;
 
 import src.pacmanGame.Item.Portal;
 import src.pacmanGame.PacActor.Monster.Monster;
+import src.pacmanGame.PacActor.Monster.MonsterFactory;
+import src.pacmanGame.PacActor.Monster.MonsterType;
 import src.pacmanGame.PacActor.PacMan.PacMan;
-import src.pacmanGame.PacActor.Monster.Troll;
-import src.pacmanGame.PacActor.Monster.Tx5;
 import src.utility.GameCallback;
 
 import java.awt.*;
@@ -157,21 +157,21 @@ public class TorusVerseGame extends GameGrid {
                 }
             }
 
-//            for (Monster troll : trolls) {
-//                if (troll.getLocation().equals(pacMan.getLocation())) {
-//                    hasPacmanBeenHit = true;
-//                    break;
-//                }
-//            }
-//
-//            if (!hasPacmanBeenHit) {
-//                for (Monster tx5 : tx5s) {
-//                    if (tx5.getLocation().equals(pacMan.getLocation())) {
-//                        hasPacmanBeenHit = true;
-//                        break;
-//                    }
-//                }
-//            }
+            for (Monster troll : trolls) {
+                if (troll.getLocation().equals(pacMan.getLocation())) {
+                    hasPacmanBeenHit = true;
+                    break;
+                }
+            }
+
+            if (!hasPacmanBeenHit) {
+                for (Monster tx5 : tx5s) {
+                    if (tx5.getLocation().equals(pacMan.getLocation())) {
+                        hasPacmanBeenHit = true;
+                        break;
+                    }
+                }
+            }
 
             if (portals.size() != 0) {
                 try {
