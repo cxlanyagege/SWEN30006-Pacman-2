@@ -38,7 +38,7 @@ public class TorusVerseGame extends GameGrid {
     protected List<NewGameGrid> grids = new ArrayList<>();
     protected NewGameGrid currentGrid;
     private boolean pacManAdded = false;
-    private MonsterFactory monsterFactory = new MonsterFactory();
+    private final MonsterFactory monsterFactory = new MonsterFactory();
 
 
     public TorusVerseGame(GameCallback gameCallback, Properties properties, List<String> mapStrings) {
@@ -299,8 +299,6 @@ public class TorusVerseGame extends GameGrid {
             // Check if the length of the list is 2
             if (portalPair.size() != 2) {
                 continue;
-            } else {
-                // TODO: add error log
             }
 
             Portal portal1 = portalPair.get(0);
@@ -386,6 +384,7 @@ public class TorusVerseGame extends GameGrid {
                 }
 
                 if (a == 'a') { // pathTile
+                    bg.fillCell(location, Color.lightGray);
 
                 } else if (a == 'c') { // pill
                     putPill(bg, location);

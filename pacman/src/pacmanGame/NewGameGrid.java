@@ -2,18 +2,15 @@ package src.pacmanGame;
 
 import ch.aplu.jgamegrid.*;
 
-public class NewGameGrid extends PacManGameGrid {
+public class NewGameGrid extends GameGrid {
 
-    private final int nbHorzCells = 20;
-    private final int nbVertCells = 11;
-    private char[][] mazeArray;
-
-    private String mapString;
+    private final char[][] mazeArray;
 
     public NewGameGrid(String mapString) {
         super();
 
-        this.mapString = mapString;
+        int nbHorzCells = 20;
+        int nbVertCells = 11;
         mazeArray = new char[nbVertCells][nbHorzCells];
 
 
