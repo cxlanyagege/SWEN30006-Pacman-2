@@ -101,11 +101,7 @@ public class TorusVerseGame extends GameGrid {
 
             if (hasPacmanEatAllPills) {
 
-                for (Actor actor : getActors()) {
-                    if (actor != pacMan) {
-                        actor.removeSelf();
-                    }
-                }
+
 
                 trolls.clear();
                 tx5s.clear();
@@ -115,11 +111,16 @@ public class TorusVerseGame extends GameGrid {
                 pillAndItemLocations.clear();
 
 
-                bg.clear();
-                refresh();
-
 
                 if (currentMapIndex < mapStrings.size() - 1) {
+                    bg.clear();
+                    for (Actor actor : getActors()) {
+                        if (actor != pacMan) {
+                            actor.removeSelf();
+                        }
+                    }
+                    refresh();
+
                     currentMapIndex++;
                     currentGrid = grids.get(currentMapIndex);
 
@@ -146,6 +147,7 @@ public class TorusVerseGame extends GameGrid {
 
                 } else {
                     hasCompletedAllMaps = true;
+
                 }
             }
 
@@ -183,6 +185,7 @@ public class TorusVerseGame extends GameGrid {
                 delay(10);
 
             }
+
 
         } while (!hasPacmanBeenHit && !hasCompletedAllMaps);
         delay(120);
