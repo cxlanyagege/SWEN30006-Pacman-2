@@ -16,11 +16,10 @@ public class FileLoadStrategy implements LoadStrategy {
 
     @Override
     public void load(File selectedFile) {
-        SAXBuilder builder = new SAXBuilder();
 
         try {
-            Document document = builder.build(selectedFile);
-            String mapString = MapStringParser.parse(document);
+
+            String mapString = MapStringParser.parse(selectedFile);
             List<String> mapStrings = new ArrayList<>();
             mapStrings.add(mapString);
 

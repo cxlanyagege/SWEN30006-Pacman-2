@@ -75,6 +75,10 @@ public class Controller implements ActionListener, GUIInformation {
         return currentFileName;
     }
 
+    public void setCurrentFileName(String currentFileName) {
+        this.currentFileName = currentFileName;
+    }
+
     public Grid getModel() {
         return model;
     }
@@ -244,6 +248,7 @@ public class Controller implements ActionListener, GUIInformation {
                     loadContext.load(selectedFile);
 
                 } else if (selectedFile.canRead() && selectedFile.exists()) {
+
                     currentFileName = selectedFile.getName();
                     fileDirectory = selectedFile.getParent();
                     //Code to load file

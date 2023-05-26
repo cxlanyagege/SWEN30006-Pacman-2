@@ -18,6 +18,7 @@ public class Checker {
     public Checker() {
 
         this.model = Controller.getInstance().getModel();
+
         this.currentFileName = Controller.getInstance().getCurrentFileName();
 
     }
@@ -37,38 +38,43 @@ public class Checker {
 
     // Game Checking
     public File[] gameCheck(File gameFolder) {
+
         File[] mapFiles = gameFolder.listFiles((dir, name) -> name.endsWith(".xml"));
         File[] validMapFiles = null;
+        List<File> validMapFilesList = new ArrayList<>();
 
-        // 检查是否有XML文件
-        if (mapFiles == null || mapFiles.length == 0) {
+        // 检查地图文件名是否以数字开头
+        for (File file : mapFiles) {
+            String fileName = file.getName();
+            if (Character.isDigit(fileName.charAt(0))) {
+                validMapFilesList.add(file);
+            }
+        }
+
+        if (validMapFilesList.isEmpty()) {
             String message = String.format("[Game %s – no maps found]", gameFolder.getName());
             System.out.println(message);
             writeToLogFile(message, currentFileName);
         } else {
-            List<File> validMapFilesList = new ArrayList<>();
-
-            // 检查地图文件名是否以数字开头
-            for (File file : mapFiles) {
-                String fileName = file.getName();
-                if (Character.isDigit(fileName.charAt(0))) {
-                    validMapFilesList.add(file);
-                }
-            }
+            validMapFiles = validMapFilesList.toArray(new File[0]);
 
             // 检查地图文件序列是否良好定义
-            if (validMapFilesList.size() > 0) {
-                validMapFiles = validMapFilesList.toArray(new File[0]);
-                if (!checkMapFileSequence(validMapFiles)) {
-                    validMapFiles = null;
-                }
+            if (!checkMapFileSequence(validMapFiles)) {
+                validMapFiles = null;
+            } else {
+                // 按照文件名的level进行排序
+                Arrays.sort(validMapFiles, (f1, f2) -> {
+                    String level1 = getLevelFromFileName(f1.getName());
+                    String level2 = getLevelFromFileName(f2.getName());
+                    return Integer.compare(Integer.parseInt(level1), Integer.parseInt(level2));
+                });
             }
         }
-        
-        System.out.println(validMapFiles);
-        return validMapFiles;
-    }
 
+        System.out.println(Arrays.toString(validMapFiles));
+        return validMapFiles;
+
+    }
 
 
     // game checker helper methods
