@@ -48,17 +48,12 @@ public class TorusVerseGame extends GameGrid {
             grids.add(currentGrid);
         }
 
-        // TODO: remove sout
-        System.out.println("num of grids: " + grids.size());
-
         currentGrid = grids.get(currentMapIndex);
 
         setSimulationPeriod(100);
         setTitle("[PacMan in the TorusVerse]");
 
         // Setup for auto test
-        //TODO: Conflict
-        //pacMan.setPropertyMoves(properties.getProperty("PacMan.move"));
         pacMan.setAuto(Boolean.parseBoolean(properties.getProperty("PacMan.isAuto")));
 
         // loadMap();
@@ -70,11 +65,10 @@ public class TorusVerseGame extends GameGrid {
         addKeyRepeatListener(pacMan);
         setKeyRepeatPeriod(150);
 
-        // Setup Random seeds and slow down
-
+        // setup Random seeds
         int seed = Integer.parseInt(properties.getProperty("seed"));
-        //TODO: Conflict
-        //pacMan.setSeed(seed);
+
+        // slow down
         pacMan.setSlowDown(3);
         for (Monster troll : trolls) {
             troll.setSeed(seed);
@@ -96,9 +90,6 @@ public class TorusVerseGame extends GameGrid {
         boolean hasPacmanEatAllPills;
         setupItemsLocationsFromMap();
         int maxPillsAndItems = countItemsFromMap();
-
-        //TODO: remove sout
-        System.out.println(maxPillsAndItems);
 
         boolean hasCompletedAllMaps = false;
 
@@ -379,7 +370,7 @@ public class TorusVerseGame extends GameGrid {
                 bg.setPaintColor(Color.white);
                 Location location = new Location(x, y);
                 char a = currentGrid.getCellChar(location);
-                System.out.println(location);
+                //System.out.println(location);
 
 
                 if (a == 'b') {
