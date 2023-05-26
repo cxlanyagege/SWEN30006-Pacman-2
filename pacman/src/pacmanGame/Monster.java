@@ -94,14 +94,14 @@ public abstract class Monster extends PacActor
     return type;
   }
 
-  void addVisitedList(Location location)
+  public void addVisitedList(Location location)
   {
     visitedList.add(location);
     if (visitedList.size() == listLength)
       visitedList.remove(0);
   }
 
-  boolean isVisited(Location location)
+  public boolean isVisited(Location location)
   {
     for (Location loc : visitedList)
       if (loc.equals(location))

@@ -33,6 +33,7 @@ public class TorusVerseGame extends GameGrid {
     protected List<NewGameGrid> grids = new ArrayList<>();
     protected NewGameGrid currentGrid;
     private boolean pacManAdded = false;
+    private MonsterFactory monsterFactory = new MonsterFactory();
 
 
     public TorusVerseGame(GameCallback gameCallback, Properties properties, List<String> mapStrings) {
@@ -396,11 +397,15 @@ public class TorusVerseGame extends GameGrid {
                     }
 
                 } else if (a == 'g') {//troll
-                    Monster troll = new Troll(this);
+                    Monster troll =
+                            monsterFactory.createMonster(this,
+                                    MonsterType.Troll);
                     addActor(troll, location);
                     trolls.add(troll);
                 } else if (a == 'h') {//tx5
-                    Monster tx5 = new Tx5(this);
+                    Monster tx5 =
+                            monsterFactory.createMonster(this,
+                                    MonsterType.TX5);
                     addActor(tx5, location);
                     tx5s.add(tx5);
                 } else if (a == 'i') {//portal white
