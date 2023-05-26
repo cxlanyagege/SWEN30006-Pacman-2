@@ -18,6 +18,7 @@ public class Checker {
     public Checker() {
 
         this.model = Controller.getInstance().getModel();
+
         this.currentFileName = Controller.getInstance().getCurrentFileName();
 
     }
@@ -56,6 +57,14 @@ public class Checker {
                 }
             }
 
+            // no map pass game check
+            if(validMapFiles == null){
+                String message = String.format("[Game %s – no maps found]", gameFolder.getName());
+                //System.out.println(message);
+                writeToLogFile(message, currentFileName);
+
+            }
+
             // 检查地图文件序列是否良好定义
             if (validMapFilesList.size() > 0) {
                 validMapFiles = validMapFilesList.toArray(new File[0]);
@@ -63,9 +72,11 @@ public class Checker {
                     validMapFiles = null;
                 }
             }
+
+
         }
         
-        System.out.println(validMapFiles);
+        System.out.println("num of validMaps: " + validMapFiles);
         return validMapFiles;
     }
 
