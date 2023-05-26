@@ -1,8 +1,13 @@
+/*
+ *  Team Name: monday-16-15-team-04
+ *  Team Member:
+ *               Xinyi Yuan
+ *               He Shen
+ *               Yuchen Dong
+ */
+
 package src.matachi.mapeditor.editor.Checker.LevelCheck;
 
-
-import org.w3c.dom.ls.LSOutput;
-import src.matachi.mapeditor.editor.Checker.LevelCheck.LevelChecker;
 import src.matachi.mapeditor.grid.Grid;
 
 import java.util.*;

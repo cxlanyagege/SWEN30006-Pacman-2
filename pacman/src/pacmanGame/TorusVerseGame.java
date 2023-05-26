@@ -1,3 +1,11 @@
+/*
+ *  Team Name: monday-16-15-team-04
+ *  Team Member:
+ *               Xinyi Yuan
+ *               He Shen
+ *               Yuchen Dong
+ */
+
 // PacMan.java
 // Simple PacMan implementation
 package src.pacmanGame;

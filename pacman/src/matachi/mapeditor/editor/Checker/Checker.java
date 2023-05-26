@@ -1,4 +1,13 @@
+/*
+ *  Team Name: monday-16-15-team-04
+ *  Team Member:
+ *               Xinyi Yuan
+ *               He Shen
+ *               Yuchen Dong
+ */
+
 package src.matachi.mapeditor.editor.Checker;
+
 import static src.utility.LogUtil.writeToLogFile;
 
 import src.matachi.mapeditor.editor.Checker.LevelCheck.LevelChecker;
@@ -14,11 +23,9 @@ public class Checker {
     private Grid model;
     private String currentFileName;
 
-
     public Checker() {
 
         this.model = Controller.getInstance().getModel();
-
         this.currentFileName = Controller.getInstance().getCurrentFileName();
 
     }
@@ -74,7 +81,6 @@ public class Checker {
 
     }
 
-
     // game checker helper methods
     private boolean checkMapFileSequence(File[] mapFiles) {
         boolean flag = true;
@@ -119,7 +125,4 @@ public class Checker {
 
         return levelBuilder.toString();
     }
-
-
-
 }

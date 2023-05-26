@@ -1,3 +1,11 @@
+/*
+ *  Team Name: monday-16-15-team-04
+ *  Team Member:
+ *               Xinyi Yuan
+ *               He Shen
+ *               Yuchen Dong
+ */
+
 package src.matachi.mapeditor.editor.LoadStrategy;
 
 import src.facade.Facade;
@@ -12,7 +20,6 @@ import java.util.List;
 
 public class FileLoadStrategy implements LoadStrategy {
     private final Facade facade = Facade.getInstance();
-
 
     @Override
     public void load(File selectedFile) {

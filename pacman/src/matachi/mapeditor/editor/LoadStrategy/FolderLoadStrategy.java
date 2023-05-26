@@ -1,5 +1,12 @@
-package src.matachi.mapeditor.editor.LoadStrategy;
+/*
+ *  Team Name: monday-16-15-team-04
+ *  Team Member:
+ *               Xinyi Yuan
+ *               He Shen
+ *               Yuchen Dong
+ */
 
+package src.matachi.mapeditor.editor.LoadStrategy;
 
 import src.facade.Facade;
 import src.matachi.mapeditor.editor.Checker.Checker;
@@ -21,7 +28,6 @@ public class FolderLoadStrategy implements LoadStrategy {
 
             Checker checker = new Checker();
             File[] validMapFiles = checker.gameCheck(selectedFile);
-
 
             List<String> mapStrings = new ArrayList<>();
 
@@ -52,17 +58,10 @@ public class FolderLoadStrategy implements LoadStrategy {
                         facade.mapLoaded();
                         new Thread(facade::startGame).start();
                     }
-
                 }
-
             }
-
-
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 }
-

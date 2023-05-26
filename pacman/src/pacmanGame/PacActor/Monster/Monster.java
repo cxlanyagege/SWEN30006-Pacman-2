@@ -1,3 +1,11 @@
+/*
+ *  Team Name: monday-16-15-team-04
+ *  Team Member:
+ *               Xinyi Yuan
+ *               He Shen
+ *               Yuchen Dong
+ */
+
 // Monster.java
 // Used for PacMan
 package src.pacmanGame.PacActor.Monster;

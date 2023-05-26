@@ -1,3 +1,11 @@
+/*
+ *  Team Name: monday-16-15-team-04
+ *  Team Member:
+ *               Xinyi Yuan
+ *               He Shen
+ *               Yuchen Dong
+ */
+
 package src.matachi.mapeditor.editor;
 
 import java.awt.Component;
@@ -47,6 +55,4 @@ public class GridMouseInformationLabel extends JLabel implements MouseMotionList
 	private void updateMousePosition(int x, int y) {
 		this.setText("Mouse: (" + x + ", " + y + "), Hovering tile: (" + (x/Constants.TILE_WIDTH+1) + ", " + (y/Constants.TILE_HEIGHT+1) + ")");
 	}
-
-	
 }
