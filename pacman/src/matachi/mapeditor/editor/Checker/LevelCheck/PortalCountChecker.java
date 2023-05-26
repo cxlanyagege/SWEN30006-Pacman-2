@@ -52,7 +52,6 @@ public class PortalCountChecker implements LevelChecker {
                     portalYellowCoordinates.size(), portalYellowCoordinates,
                     portalDarkGoldCoordinates.size(), portalDarkGoldCoordinates,
                     portalDarkGrayCoordinates.size(), portalDarkGrayCoordinates);
-            System.out.println(message);
             writeToLogFile(message,currentFileName);
         }
 

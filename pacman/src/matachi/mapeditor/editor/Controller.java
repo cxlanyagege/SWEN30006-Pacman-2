@@ -171,7 +171,6 @@ public class Controller implements ActionListener, GUIInformation {
                 File selectedFile = chooser.getSelectedFile();
                 currentFileName = selectedFile.getName();
                 fileDirectory = selectedFile.getParent();
-                //levelCheck();
                 Checker checker = new Checker();
                 checker.levelCheck();
 

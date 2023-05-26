@@ -70,7 +70,6 @@ public class GoldAndPillAccessibilityChecker implements LevelChecker {
 
             String goldPositionsString = String.join("; ", goldPositionsList);
             String message = String.format("[Level %s - Gold not accessible: %s]", currentFileName, goldPositionsString);
-            System.out.println(message);
             writeToLogFile(message,currentFileName);
         }
 
@@ -86,7 +85,6 @@ public class GoldAndPillAccessibilityChecker implements LevelChecker {
 
             String pillPositionsString = String.join("; ", pillPositionsList);
             String message = String.format("[Level %s - Pill not accessible: %s]", currentFileName, pillPositionsString);
-            System.out.println(message);
             writeToLogFile(message,currentFileName);
         }
         return false;

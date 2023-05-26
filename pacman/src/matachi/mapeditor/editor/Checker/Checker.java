@@ -53,7 +53,6 @@ public class Checker {
 
         if (validMapFilesList.isEmpty()) {
             String message = String.format("[Game %s – no maps found]", gameFolder.getName());
-            System.out.println(message);
             writeToLogFile(message, currentFileName);
         } else {
             validMapFiles = validMapFilesList.toArray(new File[0]);
@@ -71,7 +70,6 @@ public class Checker {
             }
         }
 
-        System.out.println(Arrays.toString(validMapFiles));
         return validMapFiles;
 
     }
@@ -100,7 +98,6 @@ public class Checker {
             if (levelFiles.size() > 1) {
                 String message = String.format("[Game %s – multiple maps at same level: %s]",
                         currentFileName, String.join("; ", levelFiles));
-                System.out.println(message);
                 writeToLogFile(message,currentFileName);
                 flag = false;
             }

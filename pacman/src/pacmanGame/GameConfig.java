@@ -5,12 +5,11 @@ import src.utility.GameCallback;
 import java.util.Properties;
 
 public class GameConfig {
+
     private GameCallback gameCallback;
     private Properties properties;
     private String mapString;
-
     private static GameConfig instance;
-
 
     public static GameConfig getInstance() {
         if (instance == null) {
@@ -20,8 +19,8 @@ public class GameConfig {
     }
 
     public GameConfig() {
-    }
 
+    }
 
     public GameConfig(GameCallback gameCallback, Properties properties) {
         this.gameCallback = gameCallback;
@@ -41,7 +40,6 @@ public class GameConfig {
 
     public void setGameCallback(GameCallback gameCallback) {
         this.gameCallback = gameCallback;
-        System.out.println("setGameCallback");
     }
 
     public Properties getProperties() {
@@ -50,7 +48,6 @@ public class GameConfig {
 
     public void setProperties(Properties properties) {
         this.properties = properties;
-        //System.out.println("setProperties");
     }
 
     public void setGameCallBack(GameCallback gameCallback) {
@@ -64,4 +61,5 @@ public class GameConfig {
     public void setMapString(String mapString) {
         this.mapString = mapString;
     }
+
 }

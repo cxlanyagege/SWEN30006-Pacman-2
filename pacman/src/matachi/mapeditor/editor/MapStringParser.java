@@ -47,7 +47,7 @@ public class MapStringParser {
             }
 
         }catch (Exception e){
-            System.out.println("Error in MapStringParser");
+            e.printStackTrace();
         }
 
         return Controller.getInstance().getModel().getMapAsString();

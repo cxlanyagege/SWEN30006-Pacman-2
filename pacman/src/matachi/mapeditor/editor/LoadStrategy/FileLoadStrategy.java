@@ -25,7 +25,6 @@ public class FileLoadStrategy implements LoadStrategy {
 
             Checker checker = new Checker();
             boolean checkResult =  checker.levelCheck();
-            System.out.println("Check result: " + checkResult);
             Controller.getInstance().grid.redrawGrid();
 
             if(checkResult){
