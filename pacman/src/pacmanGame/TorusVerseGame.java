@@ -59,7 +59,7 @@ public class TorusVerseGame extends GameGrid {
         // Setup for auto test
         //TODO: Conflict
         //pacMan.setPropertyMoves(properties.getProperty("PacMan.move"));
-        //pacMan.setAuto(Boolean.parseBoolean(properties.getProperty("pacMan.isAuto")));
+        pacMan.setAuto(Boolean.parseBoolean(properties.getProperty("PacMan.isAuto")));
 
         // loadMap();
         //load map from mapStrings
@@ -110,11 +110,7 @@ public class TorusVerseGame extends GameGrid {
 
             if (hasPacmanEatAllPills) {
 
-                for (Actor actor : getActors()) {
-                    if (actor != pacMan) {
-                        actor.removeSelf();
-                    }
-                }
+
 
                 trolls.clear();
                 tx5s.clear();
@@ -124,11 +120,16 @@ public class TorusVerseGame extends GameGrid {
                 pillAndItemLocations.clear();
 
 
-                bg.clear();
-                refresh();
-
 
                 if (currentMapIndex < mapStrings.size() - 1) {
+                    bg.clear();
+                    for (Actor actor : getActors()) {
+                        if (actor != pacMan) {
+                            actor.removeSelf();
+                        }
+                    }
+                    refresh();
+
                     currentMapIndex++;
                     currentGrid = grids.get(currentMapIndex);
 
@@ -155,24 +156,25 @@ public class TorusVerseGame extends GameGrid {
 
                 } else {
                     hasCompletedAllMaps = true;
+
                 }
             }
 
-            for (Monster troll : trolls) {
-                if (troll.getLocation().equals(pacMan.getLocation())) {
-                    hasPacmanBeenHit = true;
-                    break;
-                }
-            }
-
-            if (!hasPacmanBeenHit) {
-                for (Monster tx5 : tx5s) {
-                    if (tx5.getLocation().equals(pacMan.getLocation())) {
-                        hasPacmanBeenHit = true;
-                        break;
-                    }
-                }
-            }
+//            for (Monster troll : trolls) {
+//                if (troll.getLocation().equals(pacMan.getLocation())) {
+//                    hasPacmanBeenHit = true;
+//                    break;
+//                }
+//            }
+//
+//            if (!hasPacmanBeenHit) {
+//                for (Monster tx5 : tx5s) {
+//                    if (tx5.getLocation().equals(pacMan.getLocation())) {
+//                        hasPacmanBeenHit = true;
+//                        break;
+//                    }
+//                }
+//            }
 
             if (portals.size() != 0) {
                 try {
