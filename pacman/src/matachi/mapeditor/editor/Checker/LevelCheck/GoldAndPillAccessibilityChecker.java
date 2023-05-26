@@ -1,6 +1,7 @@
 package src.matachi.mapeditor.editor.Checker.LevelCheck;
 
 
+import org.w3c.dom.ls.LSOutput;
 import src.matachi.mapeditor.editor.Checker.LevelCheck.LevelChecker;
 import src.matachi.mapeditor.grid.Grid;
 
@@ -19,7 +20,7 @@ public class GoldAndPillAccessibilityChecker implements LevelChecker {
 
     @Override
     public boolean check() {
-        // 获取金币和药丸的位置
+        // get the positions of gold & pill
         Set<Integer> goldPositions = new HashSet<>();
         Set<Integer> pillPositions = new HashSet<>();
 
@@ -39,26 +40,26 @@ public class GoldAndPillAccessibilityChecker implements LevelChecker {
         List<Integer> inaccessibleGoldPositions = new ArrayList<>();
         List<Integer> inaccessiblePillPositions = new ArrayList<>();
 
-        // 检查金币的可访问性
+        // check the accessibility of gold
         for (int position : goldPositions) {
             if (!isAccessible(position)) {
                 inaccessibleGoldPositions.add(position);
             }
         }
 
-        // 检查药丸的可访问性
+        // check the accessibility of pill
         for (int position : pillPositions) {
             if (!isAccessible(position)) {
                 inaccessiblePillPositions.add(position);
             }
         }
 
-        // 如果存在不可访问的金币位置
+        // if no inaccessible gold & pill
         if(inaccessibleGoldPositions.isEmpty() && inaccessiblePillPositions.isEmpty()) {
             return true;
         }
 
-        // 如果存在不可访问的金币位置
+        // if exist inaccessible gold, log out
         if (!inaccessibleGoldPositions.isEmpty()) {
             List<String> goldPositionsList = new ArrayList<>();
             for (int position : inaccessibleGoldPositions) {
@@ -70,11 +71,10 @@ public class GoldAndPillAccessibilityChecker implements LevelChecker {
 
             String goldPositionsString = String.join("; ", goldPositionsList);
             String message = String.format("[Level %s - Gold not accessible: %s]", currentFileName, goldPositionsString);
-            System.out.println(message);
             writeToLogFile(message,currentFileName);
         }
 
-        // 如果存在不可访问的药丸位置
+        // if exist inaccessible pill, log out
         if (!inaccessiblePillPositions.isEmpty()) {
             List<String> pillPositionsList = new ArrayList<>();
             for (int position : inaccessiblePillPositions) {
@@ -86,7 +86,6 @@ public class GoldAndPillAccessibilityChecker implements LevelChecker {
 
             String pillPositionsString = String.join("; ", pillPositionsList);
             String message = String.format("[Level %s - Pill not accessible: %s]", currentFileName, pillPositionsString);
-            System.out.println(message);
             writeToLogFile(message,currentFileName);
         }
         return false;
@@ -104,7 +103,7 @@ public class GoldAndPillAccessibilityChecker implements LevelChecker {
             int row = position / model.getWidth();
             int col = position % model.getWidth();
 
-            // 检查四个方向
+            // check 4 direction
             if (row > 0) {
                 isAccessibleTile(col, row - 1, visited, queue);
             }
@@ -118,8 +117,6 @@ public class GoldAndPillAccessibilityChecker implements LevelChecker {
                 isAccessibleTile(col + 1, row, visited, queue);
             }
         }
-
-        // 通过 Pacman 位置的访问状态检查可访问性
         for (int i = 0; i < model.getWidth(); i++) {
             for (int j = 0; j < model.getHeight(); j++) {
                 char tileChar = model.getTile(i, j);
@@ -140,7 +137,7 @@ public class GoldAndPillAccessibilityChecker implements LevelChecker {
                 visited[position] = true;
                 queue.offer(position);
             } else if (isPortal(tileChar)) {
-                // 只有在找到配对的传送门并且它可以被访问时，才将其视为可访问
+                // Find the pair of Portal
                 int pairPosition = getPortalPairPosition(tileChar, position);
                 if (pairPosition != -1) {
                     visited[position] = true;
@@ -168,13 +165,12 @@ public class GoldAndPillAccessibilityChecker implements LevelChecker {
                 }
             }
         }
-        // 没有找到配对的传送门
+        // if no pair of portal exist
         if (portalPositions.size() != 2) {
             return -1;
         }
-        // 返回另一个传送门的位置
+        // return the pair of portal
         return portalPositions.get(0) == currentPos ? portalPositions.get(1) : portalPositions.get(0);
     }
-
 
 }
