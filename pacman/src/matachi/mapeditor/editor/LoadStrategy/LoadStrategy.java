@@ -1,4 +1,4 @@
-package src.matachi.mapeditor.editor;
+package src.matachi.mapeditor.editor.LoadStrategy;
 
 import java.io.File;
 

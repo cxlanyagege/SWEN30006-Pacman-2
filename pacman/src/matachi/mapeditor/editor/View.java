@@ -170,26 +170,5 @@ public class View {
 	public void close() {
 		frame.setVisible(false);
 	}
-	// /**
-	// * Flip the grid on or off.
-	// */
-	// public void flipGrid() {
-	// this.showingGrid = !this.showingGrid;
-	// if (!showingGrid) {
-	// showGridButton.setText("Show grid");
-	// for (int y = 0; y < 20; y++) {
-	// for (int x = 0; x < 32; x++) {
-	// map[y][x].flipGrid();
-	// }
-	// }
-	// } else {
-	// showGridButton.setText("Hide grid");
-	// for (int y = 0; y < 20; y++) {
-	// for (int x = 0; x < 32; x++) {
-	// map[y][x].flipGrid();
-	// }
-	// }
-	// }
-	// frame.repaint();
-	// }
+
 }

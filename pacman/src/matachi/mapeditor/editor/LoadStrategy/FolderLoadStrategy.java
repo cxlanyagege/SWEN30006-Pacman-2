@@ -1,8 +1,10 @@
-package src.matachi.mapeditor.editor;
+package src.matachi.mapeditor.editor.LoadStrategy;
 
 
 import src.facade.Facade;
 import src.matachi.mapeditor.editor.Checker.Checker;
+import src.matachi.mapeditor.editor.Controller;
+import src.matachi.mapeditor.editor.MapStringParser;
 
 
 import java.io.File;
