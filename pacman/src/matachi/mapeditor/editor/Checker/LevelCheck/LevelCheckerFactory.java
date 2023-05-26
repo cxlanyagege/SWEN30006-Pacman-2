@@ -1,4 +1,4 @@
-package src.matachi.mapeditor.editor.Checker;
+package src.matachi.mapeditor.editor.Checker.LevelCheck;
 
 
 import src.matachi.mapeditor.grid.Grid;

@@ -1,6 +1,9 @@
-package src.pacmanGame;
+package src.pacmanGame.PacActor.Monster;
 
 import ch.aplu.jgamegrid.Location;
+import src.pacmanGame.PacActor.Monster.Monster;
+import src.pacmanGame.PacActor.Monster.MonsterType;
+import src.pacmanGame.TorusVerseGame;
 
 public class Tx5 extends Monster {
     private final TorusVerseGame torusVerseGame;

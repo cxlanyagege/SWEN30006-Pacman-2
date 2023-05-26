@@ -1,4 +1,6 @@
-package src.pacmanGame;
+package src.pacmanGame.PacActor.Monster;
+
+import src.pacmanGame.TorusVerseGame;
 
 public class MonsterFactory {
     public MonsterFactory() {

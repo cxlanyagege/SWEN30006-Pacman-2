@@ -1,4 +1,4 @@
-package src.pacmanGame;
+package src.pacmanGame.Item;
 
 import java.awt.Color;
 import ch.aplu.jgamegrid.Actor;

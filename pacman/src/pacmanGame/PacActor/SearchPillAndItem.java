@@ -1,6 +1,9 @@
-package src.pacmanGame;
+package src.pacmanGame.PacActor;
 
 import ch.aplu.jgamegrid.Location;
+import src.pacmanGame.Item.Portal;
+import src.pacmanGame.PacActor.PacMan.PacMan;
+import src.pacmanGame.TorusVerseGame;
 
 import java.util.HashMap;
 import java.util.LinkedList;

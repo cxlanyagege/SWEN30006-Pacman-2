@@ -1,6 +1,7 @@
-package src.pacmanGame;
+package src.pacmanGame.PacActor;
 
 import ch.aplu.jgamegrid.*;
+import src.pacmanGame.TorusVerseGame;
 
 import java.awt.Color;
 
@@ -20,7 +21,7 @@ public abstract class PacActor extends Actor {
         super(spriteName);
     }
 
-    protected boolean canMove(Location location) {
+    public boolean canMove(Location location) {
         Color c = getBackground().getColor(location);
         return !c.equals(Color.gray) && location.getX() < torusVerseGame.getNumHorzCells()
                 && location.getX() >= 0 && location.getY() < torusVerseGame.getNumVertCells() && location.getY() >= 0;

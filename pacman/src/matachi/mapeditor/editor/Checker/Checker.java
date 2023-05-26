@@ -1,12 +1,12 @@
 package src.matachi.mapeditor.editor.Checker;
-import static src.matachi.mapeditor.editor.Checker.LogUtil.writeToLogFile;
+import static src.utility.LogUtil.writeToLogFile;
 
+import src.matachi.mapeditor.editor.Checker.LevelCheck.LevelChecker;
+import src.matachi.mapeditor.editor.Checker.LevelCheck.LevelCheckerFactory;
 import src.matachi.mapeditor.editor.Controller;
 import src.matachi.mapeditor.grid.Grid;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
 
 public class Checker {

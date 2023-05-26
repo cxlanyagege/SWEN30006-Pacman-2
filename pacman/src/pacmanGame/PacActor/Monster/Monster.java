@@ -1,8 +1,11 @@
 // Monster.java
 // Used for PacMan
-package src.pacmanGame;
+package src.pacmanGame.PacActor.Monster;
 
 import ch.aplu.jgamegrid.*;
+import src.pacmanGame.PacActor.PacActor;
+import src.pacmanGame.TorusVerseGame;
+
 import java.util.*;
 
 public abstract class Monster extends PacActor

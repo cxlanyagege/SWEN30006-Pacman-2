@@ -1,8 +1,13 @@
 // PacActor.java
 // Used for PacMan
-package src.pacmanGame;
+package src.pacmanGame.PacActor.PacMan;
 
 import ch.aplu.jgamegrid.*;
+import src.pacmanGame.PacActor.PacActor;
+import src.pacmanGame.PacActor.SearchPillAndItem;
+import src.pacmanGame.PacActor.SearchStrategy;
+import src.pacmanGame.TorusVerseGame;
+
 import java.awt.event.KeyEvent;
 import java.awt.Color;
 import java.util.*;
@@ -80,7 +85,7 @@ public class PacMan extends PacActor implements GGKeyRepeatListener
   }
 
   // Check if pill is still valid in that position
-  boolean isPillLocation(Location location) {
+  public boolean isPillLocation(Location location) {
     List<Location> pillLocations = torusVerseGame.getPillAndItemLocations();
     for (Location pillLocation : pillLocations) {
       if (pillLocation.equals(location)) {

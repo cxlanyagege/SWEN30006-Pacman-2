@@ -1,4 +1,4 @@
-package src.matachi.mapeditor.editor.Checker;
+package src.utility;
 
 import java.io.File;
 import java.io.FileWriter;

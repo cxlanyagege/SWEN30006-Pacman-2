@@ -1,8 +1,9 @@
-package src.matachi.mapeditor.editor.Checker;
+package src.matachi.mapeditor.editor.Checker.LevelCheck;
 
+import src.matachi.mapeditor.editor.Checker.LevelCheck.LevelChecker;
 import src.matachi.mapeditor.grid.Grid;
 
-import static src.matachi.mapeditor.editor.Checker.LogUtil.writeToLogFile;
+import static src.utility.LogUtil.writeToLogFile;
 
 public class GoldAndPillCountChecker implements LevelChecker {
     private Grid model;

@@ -1,13 +1,14 @@
-package src.matachi.mapeditor.editor.Checker;
+package src.matachi.mapeditor.editor.Checker.LevelCheck;
 
+import src.matachi.mapeditor.editor.Checker.LevelCheck.LevelChecker;
 import src.matachi.mapeditor.grid.Grid;
 import java.util.ArrayList;
 import java.util.List;
 
-import static src.matachi.mapeditor.editor.Checker.LogUtil.writeToLogFile;
+import static src.utility.LogUtil.writeToLogFile;
 
 
-public class PacManStartChecker implements LevelChecker{
+public class PacManStartChecker implements LevelChecker {
     private Grid model;
     private String currentFileName;
 

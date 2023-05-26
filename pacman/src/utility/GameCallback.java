@@ -1,7 +1,7 @@
 package src.utility;
 
 import ch.aplu.jgamegrid.Location;
-import src.pacmanGame.Monster;
+import src.pacmanGame.PacActor.Monster.Monster;
 
 import java.io.File;
 import java.io.FileWriter;

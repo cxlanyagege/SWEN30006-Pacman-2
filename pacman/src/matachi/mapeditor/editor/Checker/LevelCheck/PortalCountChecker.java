@@ -1,12 +1,13 @@
-package src.matachi.mapeditor.editor.Checker;
+package src.matachi.mapeditor.editor.Checker.LevelCheck;
 
 
+import src.matachi.mapeditor.editor.Checker.LevelCheck.LevelChecker;
 import src.matachi.mapeditor.grid.Grid;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static src.matachi.mapeditor.editor.Checker.LogUtil.writeToLogFile;
+import static src.utility.LogUtil.writeToLogFile;
 
 public class PortalCountChecker implements LevelChecker {
     private Grid model;
@@ -19,7 +20,6 @@ public class PortalCountChecker implements LevelChecker {
 
     @Override
     public boolean check() {
-        System.out.println("PortalCountCheker");
         List<String> portalWhiteCoordinates = new ArrayList<>();
         List<String> portalYellowCoordinates = new ArrayList<>();
         List<String> portalDarkGoldCoordinates = new ArrayList<>();

@@ -1,4 +1,4 @@
-package src.pacmanGame;
+package src.pacmanGame.PacActor.Monster;
 
 public enum MonsterType {
     Troll,

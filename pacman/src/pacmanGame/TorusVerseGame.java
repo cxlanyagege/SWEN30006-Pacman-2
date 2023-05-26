@@ -4,6 +4,11 @@ package src.pacmanGame;
 
 import ch.aplu.jgamegrid.*;
 
+import src.pacmanGame.Item.Portal;
+import src.pacmanGame.PacActor.Monster.Monster;
+import src.pacmanGame.PacActor.PacMan.PacMan;
+import src.pacmanGame.PacActor.Monster.Troll;
+import src.pacmanGame.PacActor.Monster.Tx5;
 import src.utility.GameCallback;
 
 import java.awt.*;
@@ -18,7 +23,7 @@ public class TorusVerseGame extends GameGrid {
     private final static int nbHorzCells = 20;
     private final static int nbVertCells = 11;
 
-    protected PacMan pacMan = new PacMan(this);
+    public PacMan pacMan = new PacMan(this);
 
     private final ArrayList<Monster> trolls = new ArrayList<>();
     private final  ArrayList<Monster> tx5s = new ArrayList<>();
