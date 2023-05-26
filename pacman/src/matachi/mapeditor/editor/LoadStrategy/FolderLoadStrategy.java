@@ -19,7 +19,6 @@ public class FolderLoadStrategy implements LoadStrategy {
 
         try {
 
-           // File[] files = selectedFile.listFiles();
             Checker checker = new Checker();
             File[] validMapFiles = checker.gameCheck(selectedFile);
 
@@ -40,7 +39,6 @@ public class FolderLoadStrategy implements LoadStrategy {
                             mapStrings.add(mapString);
                             numPassCheck++;
                         } else {
-                            System.out.println("File did not pass check");
                             Controller.getInstance().grid.redrawGrid();
                             return;
                         }
@@ -48,7 +46,6 @@ public class FolderLoadStrategy implements LoadStrategy {
                 }
 
                 if (numOffFiles != 0 && numOffFiles == numPassCheck) {
-                    System.out.println("All files passed check");
 
                     if (mapStrings.size()>0) {
                         facade.passMapString(mapStrings);

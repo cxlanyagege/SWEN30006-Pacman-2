@@ -7,21 +7,14 @@ import src.pacmanGame.GameConfig;
 
 import java.util.List;
 
-
 public class Facade {
 
     private static Facade instance;
     private List<String> mapStrings;
-
     private Controller controller;
     private TorusVerseGame torusVerseGame;
-
     private boolean mapLoaded = false;
-
-
     private final GameConfig gameConfig = Driver.gameConfig;
-    //Properties properties = PropertiesLoader.loadPropertiesFile(propertiesPath);
-
 
     private Facade() {
 
@@ -34,22 +27,16 @@ public class Facade {
         return instance;
     }
 
-
     public void startEditor() {
         controller = Controller.getInstance();
     }
 
-
     public synchronized void startGame() {
 
         if (mapLoaded) {
-
-            this.torusVerseGame = new TorusVerseGame(gameConfig.getGameCallback(), gameConfig.getProperties(), mapStrings);
-            //System.out.println(mapStrings.get(0));
-        } else {
-            System.out.println("Map not loaded");
+            this.torusVerseGame = new TorusVerseGame(gameConfig.getGameCallback(),
+                    gameConfig.getProperties(), mapStrings);
         }
-
     }
 
     public synchronized void passMapString(List<String> mapStrings) {
@@ -59,6 +46,5 @@ public class Facade {
     public synchronized void mapLoaded() {
         this.mapLoaded = true;
     }
-
 
 }

@@ -62,7 +62,6 @@ public class TorusVerseGame extends GameGrid {
         // Setup for auto test
         pacMan.setAuto(Boolean.parseBoolean(properties.getProperty("PacMan.isAuto")));
 
-        // loadMap();
         //load map from mapStrings
         GGBackground bg = getBg();
         drawGridFromMap(bg);
@@ -374,8 +373,6 @@ public class TorusVerseGame extends GameGrid {
                 bg.setPaintColor(Color.white);
                 Location location = new Location(x, y);
                 char a = currentGrid.getCellChar(location);
-                //System.out.println(location);
-
 
                 if (a == 'b') {
                     bg.fillCell(location, Color.gray);
