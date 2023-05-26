@@ -8,7 +8,6 @@
 
 package src.matachi.mapeditor.editor.Checker.LevelCheck;
 
-import src.matachi.mapeditor.editor.Checker.LevelCheck.LevelChecker;
 import src.matachi.mapeditor.grid.Grid;
 import java.util.ArrayList;
 import java.util.List;

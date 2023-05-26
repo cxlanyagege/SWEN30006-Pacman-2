@@ -9,8 +9,6 @@
 package src.pacmanGame.PacActor.Monster;
 
 import ch.aplu.jgamegrid.Location;
-import src.pacmanGame.PacActor.Monster.Monster;
-import src.pacmanGame.PacActor.Monster.MonsterType;
 import src.pacmanGame.TorusVerseGame;
 
 public class Troll extends Monster {
