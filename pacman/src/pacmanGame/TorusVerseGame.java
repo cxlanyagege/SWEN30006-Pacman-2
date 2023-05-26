@@ -23,7 +23,7 @@ public class TorusVerseGame extends GameGrid {
     private final static int nbHorzCells = 20;
     private final static int nbVertCells = 11;
 
-    public PacMan pacMan = new PacMan(this);
+    public PacMan pacMan;
 
     private final ArrayList<Monster> trolls = new ArrayList<>();
     private final  ArrayList<Monster> tx5s = new ArrayList<>();
@@ -45,6 +45,7 @@ public class TorusVerseGame extends GameGrid {
         // Setup game
         super(nbHorzCells, nbVertCells, 20, false);
         this.gameCallback = gameCallback;
+        pacMan = PacMan.getPacManInstance(this);
 
         int currentMapIndex = 0;
 

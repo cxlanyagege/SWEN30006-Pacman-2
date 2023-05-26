@@ -21,7 +21,7 @@ public class PacMan extends PacActor implements GGKeyRepeatListener
 
   private List<Location> pillAndItemLocations;
   private SearchStrategy searchPillAndItem = new SearchPillAndItem();
-  public PacMan(TorusVerseGame torusVerseGame)
+  private PacMan(TorusVerseGame torusVerseGame)
   {
     super(true, "sprites/pacpix.gif", nbSprites);  // Rotatable
     this.torusVerseGame = torusVerseGame;
@@ -136,4 +136,9 @@ public class PacMan extends PacActor implements GGKeyRepeatListener
     String title = "[PacMan in the TorusVerse] Current score: " + score;
     gameGrid.setTitle(title);
   }
+
+  public static PacMan getPacManInstance(TorusVerseGame torusVerseGame) {
+    return new PacMan(torusVerseGame);
+  }
+
 }
