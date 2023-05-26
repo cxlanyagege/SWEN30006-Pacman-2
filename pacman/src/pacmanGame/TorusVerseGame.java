@@ -340,7 +340,7 @@ public class TorusVerseGame extends GameGrid {
         }
     }
 
-    public void removeItem(String type, Location location) {
+    public synchronized void removeItem(String type, Location location) {
         if (type.equals("gold")) {
             for (Actor item : this.goldPieces) {
                 if (location.getX() == item.getLocation().getX() && location.getY() == item.getLocation().getY()) {

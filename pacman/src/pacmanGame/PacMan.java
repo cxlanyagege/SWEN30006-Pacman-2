@@ -128,7 +128,7 @@ public class PacMan extends PacActor implements GGKeyRepeatListener
       torusVerseGame.removeItem("ice",location);
       if (isAuto) pillAndItemLocations.remove(location);
     }
-    String title = "[PacMan in the Multiverse] Current score: " + score;
+    String title = "[PacMan in the TorusVerse] Current score: " + score;
     gameGrid.setTitle(title);
   }
 }
